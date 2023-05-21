@@ -6,3 +6,4 @@ export * from "./Profile";
 export * from "./Notifications";
 export * from "./Newsfeed";
 export * from "./SingleViewPost";
+export * from "./CreatePost";

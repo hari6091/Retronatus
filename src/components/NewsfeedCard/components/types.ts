@@ -8,6 +8,7 @@ export interface IUserFeedCardHeaderProps {
   status: "achado" | "perdido" | "devolvido";
   date: string;
   publiId: number;
+  onRequestDetail: () => void;
 }
 
 export interface IUserProps extends Omit<IStackProps, "children"> {

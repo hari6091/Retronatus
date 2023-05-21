@@ -24,7 +24,7 @@ const CommentActions = ({
     <>
       {!isReply && (
         <HStack space={3} alignItems="center" {...rest}>
-          <Text color="#c4c4c4" onPress={onPressReply}>
+          <Text color="#747474" onPress={onPressReply}>
             {replyAmount === 0 || replyAmount > 1
               ? `${replyAmount} comentários`
               : `${replyAmount} comentário`}

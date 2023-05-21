@@ -7,8 +7,7 @@ import {
   FormControl,
   Input,
 } from "native-base";
-import React, { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import React from "react";
 
 import { ICommentFormProps } from "./types";
 import { useFormik } from "formik";

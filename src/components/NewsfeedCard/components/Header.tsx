@@ -3,14 +3,12 @@ import {
   Badge,
   HStack,
   IconButton,
-  Tag,
   Text,
   useDisclose,
+  Pressable,
 } from "native-base";
 import React from "react";
-import { Pressable } from "react-native";
 
-// import { MoreOptionsActionSheet } from "../../screens/components/MoreOptionsActionSheet";
 import User from "./User";
 import { IUserFeedCardHeaderProps } from "./types";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -32,11 +30,12 @@ const UserFeedCard = ({
   status,
   date,
   publiId,
+  onRequestDetail,
   ...rest
 }: IUserFeedCardHeaderProps) => {
   const isOwner = true;
   return (
-    <Pressable /*onPress={onRequestDetail}*/>
+    <Pressable onPress={onRequestDetail}>
       <User
         avatar={{
           source: profilePic,

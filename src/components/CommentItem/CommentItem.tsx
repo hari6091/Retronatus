@@ -26,18 +26,22 @@ const CommentItem = ({
 
   return (
     <VStack {...rest} pr={isReply ? "8" : null}>
-      <CommentHeader
-        author={{ name: author.name, profilePicThumb: author.profilePicThumb }}
-        publishedAt={createdAt}
-      />
+      <VStack bg="#ececec" borderRadius="10px" py="12px" pl="12px">
+        <CommentHeader
+          author={{
+            name: author.name,
+            profilePicThumb: author.profilePicThumb,
+          }}
+          publishedAt={createdAt}
+        />
 
-      <CommentBody
-        content={{
-          text: descricao,
-        }}
-        mt="2"
-      />
-
+        <CommentBody
+          content={{
+            text: descricao,
+          }}
+          mt="2"
+        />
+      </VStack>
       <CommentActions
         replyAmount={replies?.length ?? 0}
         commentId={id}

@@ -37,6 +37,7 @@ const NewsfeedCard = ({
         profilePic={profilePic}
         status={status}
         date={data_cadastro}
+        onRequestDetail={handleOpenSingleViewPost}
       />
       <PostBody
         content={{ text: descricao }}

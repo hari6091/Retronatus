@@ -21,6 +21,7 @@ export type RootStackParamList = {
   [screens.MAIN]: NavigatorScreenParams<MainTabParamList>;
   [screens.NEWSFEED]: { eventId: number };
   [screens.SINGLE_VIEW_POST]: { feedId: number };
+  [screens.CREATE_POST]: { eventId: number };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

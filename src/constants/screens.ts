@@ -8,6 +8,7 @@ enum Screens {
   NOTIFICATIONS = "Notifications",
   NEWSFEED = "Newsfeed",
   SINGLE_VIEW_POST = "Single View Post",
+  CREATE_POST = "Create Post",
 }
 
 export default Screens;

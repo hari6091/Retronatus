@@ -3,7 +3,14 @@ import React from "react";
 
 import { screens } from "../constants";
 import { RootStackParamList } from "./types";
-import { Login, Newsfeed, Signup, SingleViewPost, Welcome } from "../screens";
+import {
+  CreatePost,
+  Login,
+  Newsfeed,
+  Signup,
+  SingleViewPost,
+  Welcome,
+} from "../screens";
 import { useAuth } from "../hooks";
 import MainTabScreen from "./MainTabScreen";
 
@@ -29,6 +36,11 @@ export const AppRoutes = () => {
           <MainStack.Screen
             name={screens.SINGLE_VIEW_POST}
             component={SingleViewPost}
+            options={{ headerShown: true }}
+          />
+          <MainStack.Screen
+            name={screens.CREATE_POST}
+            component={CreatePost}
             options={{ headerShown: true }}
           />
         </MainStack.Group>

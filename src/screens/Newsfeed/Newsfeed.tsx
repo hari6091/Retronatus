@@ -72,9 +72,9 @@ const NewsfeedScreen = ({ navigation }: NewsfeedScreenProps) => {
 
   const ItemSeparatorComponent = useCallback(() => <Box mt="3" />, []);
 
-  //   const goToPostCreation = () => {
-  //     navigation.navigate(screens.CREATE_POST);
-  //   };
+  const handleGoToPostCreation = () => {
+    navigation.navigate(screens.CREATE_POST, { eventId: items[0].id_publi });
+  };
 
   return (
     <Box flex={1} safeAreaX bg="#e9e6e6">
@@ -103,7 +103,7 @@ const NewsfeedScreen = ({ navigation }: NewsfeedScreenProps) => {
         h="64px"
         bg="#232831"
         icon={<Icon color="white" as={MaterialIcons} name="add" size="md" />}
-        // onPress={goToPostCreation}
+        onPress={handleGoToPostCreation}
       />
     </Box>
   );
