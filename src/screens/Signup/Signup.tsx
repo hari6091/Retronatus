@@ -17,6 +17,7 @@ import * as Yup from "yup";
 import { SignupScreenProps, SignupType } from "./types";
 import { screens } from "../../constants";
 import { useFormik } from "formik";
+import { useAuth } from "../../hooks";
 
 const SignUpSchema = () =>
   Yup.object().shape({
@@ -29,8 +30,15 @@ const SignUpSchema = () =>
   });
 
 const Signup = ({ navigation }: SignupScreenProps) => {
+  // const { signUp } = useAuth();
+
   const handleSignUp = (values: SignupType) => {
-    console.log(values);
+    console.log(values); // deletar
+    // try {
+    //   await signUp(values);
+    // } catch (err) {
+    //   console.log('Algo deu errado');
+    // }
   };
 
   const {
@@ -156,7 +164,7 @@ const Signup = ({ navigation }: SignupScreenProps) => {
                   bg="#232831"
                   onPress={() => handleSubmit()}
                 >
-                  Login
+                  Cadastrar-se
                 </Button>
                 <HStack justifyContent="center" w="full">
                   <Text>Já possui cadastro? </Text>

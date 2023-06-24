@@ -1,3 +1,5 @@
+import { SignupType } from "../../screens/Signup/types";
+
 interface ILogin {
   email: string;
   password: string;
@@ -11,6 +13,7 @@ export interface IUser {
 
 export interface IContext extends IUser {
   signIn: ({ email, password }: ILogin) => Promise<void>;
+  signUp: (values: Omit<SignupType, "confPassword">) => Promise<void>;
   logout: () => void;
 }
 

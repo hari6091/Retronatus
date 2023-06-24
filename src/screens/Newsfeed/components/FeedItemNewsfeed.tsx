@@ -23,16 +23,18 @@ const FeedItemNewsfeed = ({ data }: IFeedItemProps) => {
   };
 
   const handleOpenSingleViewPost = () => {
-    navigation.navigate(screens.SINGLE_VIEW_POST, { feedId: data.id_publi });
+    navigation.navigate(screens.SINGLE_VIEW_POST, {
+      feedId: data.idPublicacao,
+    });
   };
 
   return (
     <Box bgColor="white" p="4" testID="feed-item">
       <NewsfeedCard data={data} commentInputRef={commentInputRef} />
       <Divider mt="4" />
-      {!isEmpty(data.comments) && (
+      {!isEmpty(data.comentarios) && (
         <CommentItem
-          data={data.comments.items[data.comments.items.length - 1]}
+          data={data.comentarios[data.comentarios.length - 1]}
           onPressReply={handleOpenSingleViewPost}
           mt="4"
           readOnly
@@ -41,7 +43,7 @@ const FeedItemNewsfeed = ({ data }: IFeedItemProps) => {
       <CommentForm
         commentInputRef={commentInputRef}
         onSubmit={handleComment}
-        feedId={data.id_publi}
+        feedId={data.idPublicacao}
         mt="4"
       />
     </Box>

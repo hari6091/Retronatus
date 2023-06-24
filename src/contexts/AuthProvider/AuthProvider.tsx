@@ -2,6 +2,8 @@ import React, { createContext, useEffect, useMemo, useState } from "react";
 
 import { IAuthProvider, IContext, IUser } from "./types";
 import { getUserLocalStorage, setUserLocalStorage } from "./utils";
+import api from "../../services/api";
+import { SignupType } from "../../screens/Signup/types";
 
 export const AuthContext = createContext<IContext>({} as IContext);
 
@@ -24,14 +26,31 @@ export function AuthProvider({ children }: IAuthProvider) {
     password: string;
   }) => {
     try {
-      // await api.post('/login', { email, password });
+      // const req = await api.post("/Usuario/login", { email, password });
+      // const payload = { token: req.data };
 
-      const payload = { token: "token", email, username: "Teste" };
+      const payload = { token: "token", email, username: "Teste" }; //deletar
 
       setUser(payload);
       setUserLocalStorage(payload);
+    } catch (error) {
+      console.error("Ocorreu um erro ao fazer login:", error);
+      // throw new Error("Falha ao fazer login");
+    }
+  };
+
+  const signUp = async ({ name, email, password }: SignupType) => {
+    try {
+      const request = await api.post("/Usuario", {
+        name,
+        email,
+        password,
+        is_Super_Admin: false,
+      });
+
+      return request.data;
     } catch {
-      throw new Error();
+      return new Error("O cadastro falhou.");
     }
   };
 
@@ -40,7 +59,7 @@ export function AuthProvider({ children }: IAuthProvider) {
     setUserLocalStorage(null);
   };
 
-  const auth = useMemo(() => ({ ...user, signIn, logout }), [user]);
+  const auth = useMemo(() => ({ ...user, signIn, signUp, logout }), [user]);
 
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 }

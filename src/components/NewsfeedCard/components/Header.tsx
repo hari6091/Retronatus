@@ -39,7 +39,7 @@ const UserFeedCard = ({
       <User
         avatar={{
           source: profilePic,
-          alt: name,
+          alt: "",
         }}
         name={name}
         // onUserPress={onUserAvatarPress}

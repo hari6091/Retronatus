@@ -1,8 +1,8 @@
 import { TextInput } from "react-native";
-import { FeedType } from "../types";
+import { IPublicacao } from "../../../hooks";
 
 export interface IFeedItemProps {
-  data: FeedType;
+  data: IPublicacao;
   commentInputRef?: React.RefObject<TextInput>;
   onPressComment?: () => void;
 }

@@ -19,7 +19,7 @@ export type RootStackParamList = {
   [screens.SIGNUP]: undefined;
   // Auth
   [screens.MAIN]: NavigatorScreenParams<MainTabParamList>;
-  [screens.NEWSFEED]: { eventId: number };
+  [screens.NEWSFEED]: { idLocal: number };
   [screens.SINGLE_VIEW_POST]: { feedId: number };
   [screens.CREATE_POST]: { eventId: number };
 };

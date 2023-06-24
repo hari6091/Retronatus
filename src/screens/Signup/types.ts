@@ -7,5 +7,5 @@ export type SignupType = {
   name: string;
   email: string;
   password: string;
-  confPassword: string;
+  confPassword?: string;
 };

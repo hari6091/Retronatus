@@ -7,72 +7,42 @@ import {
   CommentItemWithReplies,
   NewsfeedCard,
 } from "../../components";
-import { FeedType } from "../Newsfeed/types";
-import { CommentType } from "../../components/CommentItem/types";
 import { SingleViewPostScreenProps } from "./types";
+import { IComentario, IPublicacao } from "../../hooks";
 
 const SingleViewPostScreen = ({
   navigation,
   route,
 }: SingleViewPostScreenProps) => {
-  const feedItem: FeedType = {
-    id_publi: 1,
-    name: "Hari",
-    profilePic: "Teste",
-    descricao: "Ontem eu perdi minha tilápia de estimação. Alguém viu?",
-    data_cadastro: "Teste",
+  const feedItem: IPublicacao = {
+    idPublicacao: 1,
+    content: "Segunda",
+    medias: [],
     status: "perdido",
-    comments: {
-      items: [
-        {
-          id: 1,
-          author: {
-            id: 1,
-            name: "Emanuel",
-            profilePicThumb: "profile1.jpg",
-          },
-          createdAt: "2023-05-18",
-          totalReplies: 2,
-          descricao: "Eu acho que sei onde tá!",
-          replies: [
-            {
-              id: 1,
-              author: {
-                id: 1,
-                name: "Emanuel",
-                profilePicThumb: "profile1.jpg",
-              },
-              createdAt: "2023-05-18",
-              totalReplies: 2,
-              descricao: "Isso aqui é a resposta da resposta :)",
-            },
-          ],
-        },
-        {
-          id: 2,
-          author: {
-            id: 1,
-            name: "Eliezio",
-            profilePicThumb: "profile1.jpg",
-          },
-          createdAt: "2023-05-18",
-          totalReplies: 2,
-          descricao: "Eu acho que sei onde tá!",
-        },
-        {
-          id: 3,
-          author: {
-            id: 1,
-            name: "Natália",
-            profilePicThumb: "profile1.jpg",
-          },
-          createdAt: "2023-05-18",
-          totalReplies: 2,
-          descricao: "Eu não sei de nada! 👀",
-        },
-      ],
-    },
+    date: "2023-06-18T23:44:10.417Z",
+    idUsuario: 1,
+    idLocal: 1,
+    idCategoria: 1,
+    comentarios: [
+      {
+        idComentario: 1,
+        content: "comentário",
+        idUsuario: 1,
+        idPublicacao: 1,
+        date: "2023-06-19T01:24:53.693Z",
+        respostas: [],
+      },
+      {
+        idComentario: 5,
+        content: "comentário3",
+        idUsuario: 1,
+        idPublicacao: 1,
+        date: "2023-06-19T01:24:53.693Z",
+        respostas: [],
+      },
+    ],
   };
+
   const commentInputRef = useRef<TextInput>(null);
 
   const [isCommentInputVisible, setIsCommentInputVisible] =
@@ -87,12 +57,12 @@ const SingleViewPostScreen = ({
     // });
   };
 
-  const renderItem = ({ item }: { item: CommentType }) => (
+  const renderItem = ({ item }: { item: IComentario }) => (
     <CommentItemWithReplies data={item} bgColor="white" px="4" />
   );
 
   const keyExtractor = useCallback(
-    (item: { id: number }) => item.id.toString(),
+    (item: IComentario) => item.idComentario.toString(),
     []
   );
 
@@ -114,7 +84,7 @@ const SingleViewPostScreen = ({
           <Box bgColor="white" p="4">
             <Divider mb="4" />
             <CommentForm
-              feedId={feedItem.id_publi}
+              feedId={feedItem.idPublicacao}
               onSubmit={handleComment}
               commentInputRef={commentInputRef}
             />
@@ -137,13 +107,11 @@ const SingleViewPostScreen = ({
     <Box testID="single-view-post" flex={1} safeAreaX>
       <FlatList
         flex={1}
-        data={feedItem.comments?.items}
+        data={feedItem.comentarios}
         ListHeaderComponent={ListHeaderComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        // onRefresh={refresh}
-        // refreshing={isRefreshing}
       />
     </Box>
   );

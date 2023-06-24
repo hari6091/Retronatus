@@ -1,9 +1,10 @@
 import { isEqual } from "lodash";
-import React, { memo } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 
 import { CommentHeader, CommentBody, CommentActions } from "./components";
 import { ICommentItemProps } from "./types";
 import { VStack } from "native-base";
+import { IUsuario, useUsuario } from "../../hooks";
 
 const CommentItem = ({
   data,
@@ -12,7 +13,20 @@ const CommentItem = ({
   readOnly,
   ...rest
 }: ICommentItemProps) => {
-  const { id, author, createdAt, descricao, replies } = data;
+  const { idComentario, idUsuario, date, content, respostas } = data;
+
+  const [usuario, setUsuario] = useState<IUsuario>();
+
+  const { getSingleUsuario } = useUsuario();
+
+  const loadUser = useCallback(async () => {
+    const getUser = await getSingleUsuario(idUsuario);
+    setUsuario(getUser);
+  }, [idUsuario]);
+
+  useEffect(() => {
+    loadUser();
+  });
 
   const handleReplies = async (values: any) => {
     // await addComment({
@@ -29,22 +43,22 @@ const CommentItem = ({
       <VStack bg="#ececec" borderRadius="10px" py="12px" pl="12px">
         <CommentHeader
           author={{
-            name: author.name,
-            profilePicThumb: author.profilePicThumb,
+            name: usuario?.name ?? "Carregando...",
+            profilePicThumb: "",
           }}
-          publishedAt={createdAt}
+          publishedAt={date}
         />
 
         <CommentBody
           content={{
-            text: descricao,
+            text: content,
           }}
           mt="2"
         />
       </VStack>
       <CommentActions
-        replyAmount={replies?.length ?? 0}
-        commentId={id}
+        replyAmount={respostas?.length ?? 0}
+        commentId={idComentario}
         onComment={handleReplies}
         data={data}
         mt="3"
