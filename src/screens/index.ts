@@ -7,3 +7,5 @@ export * from "./Notifications";
 export * from "./Newsfeed";
 export * from "./SingleViewPost";
 export * from "./CreatePost";
+export * from "./CreateLocal";
+export * from "./CreateCategory";

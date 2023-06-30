@@ -3,10 +3,10 @@ import api from "../../services/api";
 import { IPublicacao } from "..";
 
 interface ILocal {
-  idLocal: number;
+  idLocal?: number;
   name: string;
   address: string;
-  publicacoes: IPublicacao[];
+  publicacoes?: IPublicacao[];
 }
 
 const useLocais = () => {

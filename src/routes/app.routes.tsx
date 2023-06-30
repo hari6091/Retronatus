@@ -4,6 +4,8 @@ import React from "react";
 import { screens } from "../constants";
 import { RootStackParamList } from "./types";
 import {
+  CreateCategory,
+  CreateLocal,
   CreatePost,
   Login,
   Newsfeed,
@@ -42,6 +44,16 @@ export const AppRoutes = () => {
             name={screens.CREATE_POST}
             component={CreatePost}
             options={{ headerShown: true }}
+          />
+          <MainStack.Screen
+            name={screens.CREATE_LOCAL}
+            component={CreateLocal}
+            options={{ headerShown: true, title: "Adicionar novo local" }}
+          />
+          <MainStack.Screen
+            name={screens.CREATE_CATEGORY}
+            component={CreateCategory}
+            options={{ headerShown: true, title: "Adicionar nova categoria" }}
           />
         </MainStack.Group>
       ) : (

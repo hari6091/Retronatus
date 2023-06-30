@@ -27,15 +27,12 @@ export function AuthProvider({ children }: IAuthProvider) {
   }) => {
     try {
       // const req = await api.post("/Usuario/login", { email, password });
-      // const payload = { token: req.data };
-
-      const payload = { token: "token", email, username: "Teste" }; //deletar
+      const payload = { token: "req.data" };
 
       setUser(payload);
       setUserLocalStorage(payload);
     } catch (error) {
-      console.error("Ocorreu um erro ao fazer login:", error);
-      // throw new Error("Falha ao fazer login");
+      throw new Error("Falha ao fazer login " + error);
     }
   };
 

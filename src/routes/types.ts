@@ -22,6 +22,8 @@ export type RootStackParamList = {
   [screens.NEWSFEED]: { idLocal: number };
   [screens.SINGLE_VIEW_POST]: { feedId: number };
   [screens.CREATE_POST]: { eventId: number };
+  [screens.CREATE_LOCAL]: undefined;
+  [screens.CREATE_CATEGORY]: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

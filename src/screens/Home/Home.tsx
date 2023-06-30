@@ -6,19 +6,35 @@ import {
   Icon,
   Box,
   FlatList,
+  Fab,
+  useDisclose,
+  Actionsheet,
 } from "native-base";
 import React from "react";
 
 import { HomeScreenProps } from "./types";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { Card } from "../../components";
 import { data } from "./MockCards";
 import { screens } from "../../constants";
 
 const Home = ({ navigation }: HomeScreenProps) => {
+  const { isOpen, onOpen, onClose } = useDisclose();
+
   const handleNavigateNewsfeed = async (idLocal: number) => {
     navigation.navigate(screens.NEWSFEED, { idLocal });
   };
+
+  const handleNavigateAddLocal = () => {
+    navigation.navigate(screens.CREATE_LOCAL);
+    onClose();
+  };
+
+  const handleNavigateAddCategory = () => {
+    navigation.navigate(screens.CREATE_CATEGORY);
+    onClose();
+  };
+
   // const { locais } = useHome();
   return (
     <Center flex={1} flexDirection="column" safeArea px="8" bg="#FFE5A5">
@@ -39,6 +55,27 @@ const Home = ({ navigation }: HomeScreenProps) => {
         )}
         keyExtractor={(item) => item.idLocal.toString()}
       />
+      <Fab
+        renderInPortal={false}
+        right={6}
+        bottom={18}
+        shadow={3}
+        w="64px"
+        h="64px"
+        bg="#232831"
+        icon={<Icon color="white" as={MaterialIcons} name="add" size="md" />}
+        onPress={onOpen}
+      />
+      <Actionsheet isOpen={isOpen} onClose={onClose}>
+        <Actionsheet.Content>
+          <Actionsheet.Item onPress={handleNavigateAddLocal}>
+            Adicionar novo local
+          </Actionsheet.Item>
+          <Actionsheet.Item onPress={handleNavigateAddCategory}>
+            Adicionar nova categoria
+          </Actionsheet.Item>
+        </Actionsheet.Content>
+      </Actionsheet>
     </Center>
   );
 };

@@ -11,7 +11,6 @@ import {
   Select,
 } from "native-base";
 import React, { useLayoutEffect, useState, useCallback } from "react";
-import { Controller } from "react-hook-form";
 import { KeyboardAccessoryView } from "react-native-keyboard-accessory";
 
 import {
@@ -183,11 +182,7 @@ const CreatePost = ({ navigation, route }: CreatePostScreenProps) => {
 
   return (
     <KeyboardAvoidingView testID="create-post-screen" flex={1}>
-      {isNumber(uploadProgress) ? (
-        <Progress value={uploadProgress} />
-      ) : (
-        <Box h={1} w="full" bgColor="white" />
-      )}
+      <Box h={1} w="full" bgColor="white" />
       <ScrollView flex={1} bg="white" _contentContainerStyle={{ flexGrow: 1 }}>
         <Box px={4} py={3}>
           <FormControl isRequired isReadOnly>

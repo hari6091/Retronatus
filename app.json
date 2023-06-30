@@ -24,6 +24,9 @@
     },
     "web": {
       "favicon": "./assets/main-icon.png"
+    },
+    "extra": {
+      "androidDebugUrl": "https://localhost:7157"
     }
   }
 }
