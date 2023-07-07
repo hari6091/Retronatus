@@ -106,6 +106,18 @@ const usePublicacao = (idLocal: number) => {
     }
   }
 
+  async function getUsuarioPublicacoes(
+    idUsuario: number
+  ): Promise<IPublicacao> {
+    try {
+      const request = await api.get(`/Publicacao/${idUsuario}`);
+
+      return request.data;
+    } catch (e) {
+      throw new Error("Algo deu errado ao buscar uma Publicação. " + e);
+    }
+  }
+
   useEffect(() => {
     allPublicacaoByLocal(idLocal);
   }, []);
@@ -116,6 +128,7 @@ const usePublicacao = (idLocal: number) => {
     getSinglePublicacao,
     editPublicacao,
     deletePublicacao,
+    getUsuarioPublicacoes,
   };
 };
 

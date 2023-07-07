@@ -1,29 +1,142 @@
-import { Center, ScrollView, Text, Button } from "native-base";
-import React from "react";
+import {
+  Center,
+  ScrollView,
+  Text,
+  Button,
+  View,
+  HStack,
+  Box,
+  Icon,
+  Heading,
+  FlatList,
+  Pressable,
+} from "native-base";
+
+import React, { ReactNode } from "react";
 
 import { ProfileScreenProps } from "./types";
 import { screens } from "../../constants";
-import { useAuth } from "../../hooks";
+import { IPublicacao, useAuth, usePublicacoes } from "../../hooks";
+import UserProfileScreenHeader from "./components/UserProfileHeader";
+import UserActivity from "./components/UserActivity";
 
 const Profile = ({ navigation }: ProfileScreenProps) => {
   const { logout } = useAuth();
+
+  // const { getUsuarioPublicacoes } = usePublicacoes(1);
+
+  const publicacoes: IPublicacao[] = [
+    {
+      idPublicacao: 1,
+      content: "Segunda",
+      medias: [],
+      status: "perdido",
+      date: "2023-06-18T23:44:10.417Z",
+      idUsuario: 1,
+      idLocal: 1,
+      idCategoria: 1,
+      comentarios: [
+        {
+          idComentario: 1,
+          content: "comentário",
+          idUsuario: 1,
+          idPublicacao: 1,
+          date: "2023-06-19T01:24:53.693Z",
+          respostas: [],
+        },
+        {
+          idComentario: 5,
+          content: "comentário3",
+          idUsuario: 1,
+          idPublicacao: 1,
+          date: "2023-06-19T01:24:53.693Z",
+          respostas: [],
+        },
+      ],
+    },
+    {
+      idPublicacao: 1,
+      content: "Segunda",
+      medias: [],
+      status: "perdido",
+      date: "2023-06-18T23:44:10.417Z",
+      idUsuario: 1,
+      idLocal: 1,
+      idCategoria: 1,
+      comentarios: [
+        {
+          idComentario: 1,
+          content: "comentário",
+          idUsuario: 1,
+          idPublicacao: 1,
+          date: "2023-06-19T01:24:53.693Z",
+          respostas: [],
+        },
+        {
+          idComentario: 5,
+          content: "comentário3",
+          idUsuario: 1,
+          idPublicacao: 1,
+          date: "2023-06-19T01:24:53.693Z",
+          respostas: [],
+        },
+      ],
+    },
+    {
+      idPublicacao: 1,
+      content: "Segunda",
+      medias: [],
+      status: "perdido",
+      date: "2023-06-18T23:44:10.417Z",
+      idUsuario: 1,
+      idLocal: 1,
+      idCategoria: 1,
+      comentarios: [
+        {
+          idComentario: 1,
+          content: "comentário",
+          idUsuario: 1,
+          idPublicacao: 1,
+          date: "2023-06-19T01:24:53.693Z",
+          respostas: [],
+        },
+        {
+          idComentario: 5,
+          content: "comentário3",
+          idUsuario: 1,
+          idPublicacao: 1,
+          date: "2023-06-19T01:24:53.693Z",
+          respostas: [],
+        },
+      ],
+    },
+  ];
+
+  const user = {
+    name: "user",
+  };
 
   const handleNavigateLogin = async () => {
     await logout();
     navigation.navigate(screens.WELCOME);
   };
-
   return (
-    <Center flex={1} flexDirection="column" safeArea px="10" bg="#FFE5A5">
-      <Text fontSize="36px" textAlign="center" mb="42px" color="#232831">
-        Retronatus
-      </Text>
-      <ScrollView
-        keyboardShouldPersistTaps="always"
-        _contentContainerStyle={{ flexGrow: 1 }}
-      >
-        <Text>Aqui é a aba do perfil!</Text>
-        <Button onPress={handleNavigateLogin}>Sair</Button>
+    <Center flex={1} safeArea w="100%">
+      <ScrollView w="100%" flex={1} bg="#FFFFFF">
+        <UserProfileScreenHeader
+          user={user!}
+          isOwner
+          isAdmin
+          // onEditProfile={() => setEditing(true)}
+          onReport={navigation.goBack}
+        />
+
+        <UserActivity
+          items={publicacoes}
+          loading={false}
+          user={user!}
+          isOwner
+        />
       </ScrollView>
     </Center>
   );

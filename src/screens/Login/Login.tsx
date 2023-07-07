@@ -33,16 +33,12 @@ const Login = ({ navigation }: LoginScreenProps) => {
     navigation.navigate(screens.SIGNUP);
   };
 
-  const handleLogin = async (values: SignInType) => {
-    await signIn(values);
-  };
-
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } =
     useFormik({
       initialValues: { email: "", password: "" },
       validationSchema: SignInSchema,
       onSubmit: () => {
-        handleLogin(values);
+        signIn(values);
       },
     });
 

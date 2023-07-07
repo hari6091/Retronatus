@@ -30,14 +30,6 @@ const MainTabScreen = () => {
         })}
       />
       <Tab.Screen
-        name={screens.NOTIFICATIONS}
-        component={Notifications}
-        options={({ route }) => ({
-          headerShown: false,
-          tabBarIcon: (props) => <NotificationIcon {...props} />,
-        })}
-      />
-      <Tab.Screen
         name={screens.PROFILE}
         component={Profile}
         options={({ route }) => ({
