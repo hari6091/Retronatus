@@ -26,24 +26,17 @@ const CreateCategory = ({ navigation }: CreateCategoryScreenProps) => {
   } = useFormik<CategoryType>({
     initialValues: { name: "" },
     onSubmit: async () => {
-      if (isSubmitDisabled) {
-        return;
-      }
       await onSubmit(values);
       resetForm();
     },
   });
-  const hasContent = values.name;
-  const isSubmitDisabled = !hasContent || isSubmitting;
 
   const onSubmit = async (props: CategoryType) => {
-    if (isSubmitDisabled) {
-      return;
-    }
     try {
       await createCategoria(props);
       navigation.goBack();
     } catch (error) {
+      console.log(error);
       Toast.show({
         title: "Erro ao criar categoria",
         description: JSON.stringify(error),
@@ -67,14 +60,14 @@ const CreateCategory = ({ navigation }: CreateCategoryScreenProps) => {
           _text={{ color: "black", fontSize: 18, fontWeight: 700 }}
           _pressed={{ backgroundColor: "rgba(0,0,0,0)" }}
           onPress={() => handleSubmit()}
-          isDisabled={isSubmitDisabled}
+          isDisabled={isSubmitting || !values.name}
           isLoading={isSubmitting}
         >
           Criar
         </Button>
       ),
     });
-  }, [navigation, isSubmitDisabled, isSubmitting, handleSubmit, onSubmit]);
+  }, [navigation, isSubmitting, handleSubmit, onSubmit]);
 
   return (
     <KeyboardAvoidingView flex={1}>

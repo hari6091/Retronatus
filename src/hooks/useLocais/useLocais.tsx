@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "../../services/api";
 import { IPublicacao } from "..";
+import { AuthContext } from "../../contexts";
 
 interface ILocal {
   idLocal?: number;

@@ -6,11 +6,13 @@ import {
   VStack,
   FormControl,
   Input,
+  Toast,
 } from "native-base";
 import React from "react";
 
 import { ICommentFormProps } from "./types";
 import { useFormik } from "formik";
+import { useComentarios, useUsuario } from "../../hooks";
 
 const CommentForm = ({
   onSubmit: onSubmitProp,
@@ -18,6 +20,9 @@ const CommentForm = ({
   feedId,
   ...rest
 }: ICommentFormProps) => {
+  const { createComentario } = useComentarios();
+  const { me } = useUsuario();
+
   const {
     values,
     handleChange,
@@ -29,16 +34,23 @@ const CommentForm = ({
   } = useFormik({
     initialValues: { text: "" },
     onSubmit: async () => {
-      if (isSubmitDisabled || !onSubmitProp) {
-        return;
+      if (feedId && me) {
+        console.log("Comentando...");
+        await createComentario({
+          content: values.text,
+          idPublicacao: feedId,
+          idUsuario: me.idUsuario,
+          date: new Date(Date.now()),
+        });
+        Toast.show({
+          title: "Comentário adicionado com sucesso!",
+        });
+        resetForm();
       }
-      await onSubmitProp({ feedId, text: values.text });
-      resetForm();
     },
   });
 
-  const hasContent = values.text;
-  const isSubmitDisabled = !hasContent || isSubmitting;
+  const isSubmitDisabled = !values.text || isSubmitting;
 
   return (
     <VStack width="full" {...rest}>

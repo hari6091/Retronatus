@@ -1,140 +1,58 @@
-import {
-  Center,
-  ScrollView,
-  Text,
-  Button,
-  View,
-  HStack,
-  Box,
-  Icon,
-  Heading,
-  FlatList,
-  Pressable,
-} from "native-base";
+import { Center, ScrollView } from "native-base";
 
-import React, { ReactNode } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { ProfileScreenProps } from "./types";
-import { screens } from "../../constants";
-import { IPublicacao, useAuth, usePublicacoes } from "../../hooks";
+import { IPublicacao, useAuth, usePublicacoes, useUsuario } from "../../hooks";
 import UserProfileScreenHeader from "./components/UserProfileHeader";
 import UserActivity from "./components/UserActivity";
 
-const Profile = ({ navigation }: ProfileScreenProps) => {
-  const { logout } = useAuth();
+const Profile = ({ navigation, route }: ProfileScreenProps) => {
+  // const { logout } = useAuth();
+  const { me } = useUsuario();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // const { getUsuarioPublicacoes } = usePublicacoes(1);
+  const userId = route.params?.userId ?? me?.idUsuario;
 
-  const publicacoes: IPublicacao[] = [
-    {
-      idPublicacao: 1,
-      content: "Segunda",
-      medias: [],
-      status: "perdido",
-      date: "2023-06-18T23:44:10.417Z",
-      idUsuario: 1,
-      idLocal: 1,
-      idCategoria: 1,
-      comentarios: [
-        {
-          idComentario: 1,
-          content: "comentário",
-          idUsuario: 1,
-          idPublicacao: 1,
-          date: "2023-06-19T01:24:53.693Z",
-          respostas: [],
-        },
-        {
-          idComentario: 5,
-          content: "comentário3",
-          idUsuario: 1,
-          idPublicacao: 1,
-          date: "2023-06-19T01:24:53.693Z",
-          respostas: [],
-        },
-      ],
-    },
-    {
-      idPublicacao: 1,
-      content: "Segunda",
-      medias: [],
-      status: "perdido",
-      date: "2023-06-18T23:44:10.417Z",
-      idUsuario: 1,
-      idLocal: 1,
-      idCategoria: 1,
-      comentarios: [
-        {
-          idComentario: 1,
-          content: "comentário",
-          idUsuario: 1,
-          idPublicacao: 1,
-          date: "2023-06-19T01:24:53.693Z",
-          respostas: [],
-        },
-        {
-          idComentario: 5,
-          content: "comentário3",
-          idUsuario: 1,
-          idPublicacao: 1,
-          date: "2023-06-19T01:24:53.693Z",
-          respostas: [],
-        },
-      ],
-    },
-    {
-      idPublicacao: 1,
-      content: "Segunda",
-      medias: [],
-      status: "perdido",
-      date: "2023-06-18T23:44:10.417Z",
-      idUsuario: 1,
-      idLocal: 1,
-      idCategoria: 1,
-      comentarios: [
-        {
-          idComentario: 1,
-          content: "comentário",
-          idUsuario: 1,
-          idPublicacao: 1,
-          date: "2023-06-19T01:24:53.693Z",
-          respostas: [],
-        },
-        {
-          idComentario: 5,
-          content: "comentário3",
-          idUsuario: 1,
-          idPublicacao: 1,
-          date: "2023-06-19T01:24:53.693Z",
-          respostas: [],
-        },
-      ],
-    },
-  ];
+  const { getUsuarioPublicacoes } = usePublicacoes(userId);
 
-  const user = {
-    name: "user",
-  };
+  const [publi, setPubli] = useState<IPublicacao[]>();
 
-  const handleNavigateLogin = async () => {
-    await logout();
-    navigation.navigate(screens.WELCOME);
-  };
+  const loadPubli = useCallback(async () => {
+    if (userId) {
+      try {
+        setIsLoading(true);
+        const getPubli = await getUsuarioPublicacoes(userId);
+        setPubli(getPubli);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    loadPubli();
+  }, [userId]);
+
+  // const handleNavigateLogin = async () => {
+  //   await logout();
+  //   navigation.navigate(screens.WELCOME);
+  // };
+
   return (
     <Center flex={1} safeArea w="100%">
       <ScrollView w="100%" flex={1} bg="#FFFFFF">
         <UserProfileScreenHeader
-          user={user!}
-          isOwner
-          isAdmin
+          user={me!}
+          isAdmin={me?.is_Super_Admin || false}
           // onEditProfile={() => setEditing(true)}
           onReport={navigation.goBack}
         />
 
         <UserActivity
-          items={publicacoes}
-          loading={false}
-          user={user!}
+          items={publi ?? []}
+          loading={isLoading}
+          user={me!}
           isOwner
         />
       </ScrollView>

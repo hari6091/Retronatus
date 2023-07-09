@@ -6,14 +6,21 @@ import {
   Text,
   useDisclose,
   Pressable,
+  Button,
+  AlertDialog,
 } from "native-base";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import User from "./User";
 import { IUserFeedCardHeaderProps } from "./types";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { IPublicacao, usePublicacoes } from "../../../hooks";
 
-const Icon = ({ type }: { type: "achado" | "perdido" | "devolvido" }) => {
+const Icon = ({
+  type,
+}: {
+  type: "achado" | "perdido" | "devolvido" | undefined;
+}) => {
   switch (type) {
     case "perdido":
       return <Badge colorScheme="error">Perdido</Badge>;
@@ -31,35 +38,152 @@ const UserFeedCard = ({
   date,
   publiId,
   onRequestDetail,
+  isOwner,
   ...rest
 }: IUserFeedCardHeaderProps) => {
-  const isOwner = true;
+  const [publicacao, setPublicacao] = useState<IPublicacao>();
+  const { editPublicacao, getSinglePublicacao, deletePublicacao } =
+    usePublicacoes();
+
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const onClose = () => setIsOpen(false);
+
+  const cancelRef = React.useRef(null);
+
+  const loadPubli = useCallback(async () => {
+    const getPubli = await getSinglePublicacao(publiId);
+    setPublicacao(getPubli);
+  }, [publiId]);
+
+  useEffect(() => {
+    loadPubli();
+  }, []);
+
+  const handlePressDevolvido = async () => {
+    if (publicacao) {
+      try {
+        await editPublicacao({ ...publicacao, status: "devolvido" });
+        await loadPubli();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  const handlePressPerdido = async () => {
+    if (publicacao) {
+      try {
+        await editPublicacao({ ...publicacao, status: "perdido" });
+        await loadPubli();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  const handlePressAchado = async () => {
+    if (publicacao) {
+      try {
+        await editPublicacao({ ...publicacao, status: "achado" });
+        await loadPubli();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  const handlePressDelete = async () => {
+    if (publicacao) {
+      try {
+        await deletePublicacao(publiId);
+        onClose();
+        loadPubli();
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  const formattedDate = () => {
+    if (date) {
+      return new Date(date).toLocaleString("pt-br", {
+        dateStyle: "short",
+        timeStyle: "short",
+      });
+    }
+  };
+
   return (
     <Pressable onPress={onRequestDetail}>
       <User
         avatar={{
           source: profilePic,
-          alt: "",
         }}
         name={name}
         // onUserPress={onUserAvatarPress}
         rightElement={
           <HStack space="5">
-            <Icon type={status} />
-            {isOwner ? <MoreOptionsAccessory status={status} /> : null}
+            {status && <Icon type={status} />}
+            {isOwner ? (
+              <MoreOptionsAccessory
+                onClickAchado={handlePressAchado}
+                onClickDevolvido={handlePressDevolvido}
+                onClickPerdido={handlePressPerdido}
+                onClickDelete={() => setIsOpen(!isOpen)}
+                status={status}
+              />
+            ) : null}
           </HStack>
         }
-        bottomElement={<Text>{date}</Text>}
+        bottomElement={<Text>{formattedDate()}</Text>}
         {...rest}
       />
+      <AlertDialog
+        leastDestructiveRef={cancelRef}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <AlertDialog.Content>
+          <AlertDialog.CloseButton />
+          <AlertDialog.Header>Apagar publicacão</AlertDialog.Header>
+          <AlertDialog.Body>
+            Isto vai deletar esse post. Essa ação não pode ser desfeita. Dados
+            apagados não podem ser recuperados.
+          </AlertDialog.Body>
+          <AlertDialog.Footer>
+            <Button.Group space={2}>
+              <Button
+                variant="unstyled"
+                colorScheme="coolGray"
+                onPress={onClose}
+                ref={cancelRef}
+              >
+                Cancelar
+              </Button>
+              <Button colorScheme="danger" onPress={handlePressDelete}>
+                Deletar
+              </Button>
+            </Button.Group>
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog>
     </Pressable>
   );
 };
 
 const MoreOptionsAccessory = ({
   status,
+  onClickDevolvido,
+  onClickAchado,
+  onClickPerdido,
+  onClickDelete,
 }: {
-  status: "achado" | "perdido" | "devolvido";
+  status: "achado" | "perdido" | "devolvido" | undefined;
+  onClickDevolvido: () => void;
+  onClickAchado: () => void;
+  onClickPerdido: () => void;
+  onClickDelete: () => void;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclose();
 
@@ -79,15 +203,43 @@ const MoreOptionsAccessory = ({
       <Actionsheet isOpen={isOpen} onClose={onClose}>
         <Actionsheet.Content>
           {status === "devolvido" ? null : (
-            <Actionsheet.Item>Marcar como DEVOLVIDO</Actionsheet.Item>
+            <Actionsheet.Item
+              onPress={() => {
+                onClickDevolvido();
+                onClose();
+              }}
+            >
+              Marcar como DEVOLVIDO
+            </Actionsheet.Item>
           )}
           {status === "achado" ? null : (
-            <Actionsheet.Item>Marcar como ACHADO</Actionsheet.Item>
+            <Actionsheet.Item
+              onPress={() => {
+                onClickAchado();
+                onClose();
+              }}
+            >
+              Marcar como ACHADO
+            </Actionsheet.Item>
           )}
           {status === "perdido" ? null : (
-            <Actionsheet.Item>Marcar como PERDIDO</Actionsheet.Item>
+            <Actionsheet.Item
+              onPress={() => {
+                onClickPerdido();
+                onClose();
+              }}
+            >
+              Marcar como PERDIDO
+            </Actionsheet.Item>
           )}
-          <Actionsheet.Item>DELETAR</Actionsheet.Item>
+          <Actionsheet.Item
+            onPress={() => {
+              onClickDelete();
+              onClose();
+            }}
+          >
+            DELETAR
+          </Actionsheet.Item>
         </Actionsheet.Content>
       </Actionsheet>
     </>

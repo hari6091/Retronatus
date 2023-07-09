@@ -26,9 +26,7 @@ const User = ({
             source={avatarSource}
             size="full"
             testID="user-avatar"
-          >
-            {avatar.alt}
-          </Avatar>
+          />
         </Box>
       </Pressable>
 

@@ -7,4 +7,6 @@ export type CreatePostScreenProps = RootStackScreenProps<screens.CREATE_POST>;
 export type PostType = {
   text: string;
   medias: MediaItemType[];
+  status: "achado" | "perdido";
+  categoria: string;
 };

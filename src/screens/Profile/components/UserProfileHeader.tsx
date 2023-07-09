@@ -56,7 +56,7 @@ export default function UserProfileScreenHeader({
         <Avatar width="140px" height="140px" />
 
         <Heading size="xl" mt="16px">
-          {user.name}
+          {user?.name ?? "Carregando..."}
         </Heading>
 
         {isAdmin ? (
@@ -65,11 +65,11 @@ export default function UserProfileScreenHeader({
           </Text>
         ) : null}
 
-        {isOwner ? (
+        {/* {isOwner ? (
           <Button mt="20px" size="sm" onPress={onEditProfile}>
             Editar perfil
           </Button>
-        ) : null}
+        ) : null} */}
       </Center>
     </Box>
   );

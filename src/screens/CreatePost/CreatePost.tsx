@@ -1,5 +1,5 @@
 import * as ImagePicker from "expo-image-picker";
-import { filter, findIndex, isNumber } from "lodash";
+import { filter, findIndex } from "lodash";
 import {
   Box,
   Button,
@@ -9,22 +9,22 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Select,
+  Toast,
 } from "native-base";
-import React, { useLayoutEffect, useState, useCallback } from "react";
+import React, { useLayoutEffect, useCallback, useState } from "react";
 import { KeyboardAccessoryView } from "react-native-keyboard-accessory";
 
-import {
-  MediaList,
-  MediaItemType,
-  MediaTypes,
-  Progress,
-} from "../../components";
+import { MediaList, MediaItemType, MediaTypes } from "../../components";
 import { MediaToolBar } from "./MediaToolbar";
 import { CreatePostScreenProps, PostType } from "./types";
 import { useFormik } from "formik";
+import { useCategorias, usePublicacoes, useUsuario } from "../../hooks";
 
 const CreatePost = ({ navigation, route }: CreatePostScreenProps) => {
-  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { createPublicacao } = usePublicacoes(route.params.eventId);
+  const { me } = useUsuario();
+  const { categorias } = useCategorias();
 
   const {
     values,
@@ -36,61 +36,36 @@ const CreatePost = ({ navigation, route }: CreatePostScreenProps) => {
     isValid,
     isSubmitting,
   } = useFormik<PostType>({
-    initialValues: { text: "", medias: [] },
+    initialValues: { text: "", medias: [], status: "perdido", categoria: "" },
     onSubmit: async () => {
-      if (isSubmitDisabled) {
-        return;
-      }
       await onSubmit(values);
       resetForm();
     },
   });
 
-  const hasContent = values.text || values.medias.length > 0;
-  const isSubmitDisabled = !hasContent || isSubmitting;
-
   const onSubmit = async ({}: { text: string; medias: MediaItemType[] }) => {
-    // if (isSubmitDisabled) {
-    //   return;
-    // }
-    // const images = map(
-    //   filter(medias, (item) => item.type === 'image'),
-    //   (item) => item.source as string,
-    // );
-    // const videos = map(
-    //   filter(medias, (item) => item.type === 'video'),
-    //   (item) => item.source as string,
-    // );
-    // try {
-    //   await publishFeed(
-    //     {
-    //       target: { type: 'circle', id: selectedGroup.id },
-    //       payload: {
-    //         text,
-    //         link: embed?.url,
-    //         gif: gifPayload,
-    //         images,
-    //         videos,
-    //         poll,
-    //       },
-    //     },
-    //     (percentage) => {
-    //       setUploadProgress(percentage);
-    //     },
-    //   );
-    //   navigation.goBack();
-    // } catch (error) {
-    //   Toast.show({
-    //     title: intl.formatMessage({
-    //       description: 'Text for the error when publishing a post',
-    //       defaultMessage: 'Error publishing your new post',
-    //     }),
-    //     status: 'error',
-    //     description: getRequestErrorMessage(error),
-    //   });
-    // } finally {
-    //   setUploadProgress(null);
-    // }
+    try {
+      if (me) {
+        setIsLoading(!isLoading);
+        await createPublicacao({
+          content: values.text,
+          medias: values.medias,
+          status: values.status,
+          idUsuario: me?.idUsuario,
+          idLocal: route.params.eventId,
+          idCategoria: +values.categoria,
+        });
+        navigation.goBack();
+      }
+      return;
+    } catch (error) {
+      Toast.show({
+        title: "Erro ao publicar postagem",
+        description: "Error: " + error,
+      });
+    } finally {
+      setIsLoading(!isLoading);
+    }
   };
 
   useLayoutEffect(() => {
@@ -109,20 +84,22 @@ const CreatePost = ({ navigation, route }: CreatePostScreenProps) => {
           _text={{ color: "black", fontSize: 16, fontWeight: 700 }}
           _pressed={{ backgroundColor: "rgba(0,0,0,0)" }}
           onPress={() => handleSubmit()}
-          isDisabled={isSubmitDisabled}
-          isLoading={isSubmitting}
+          isLoading={isLoading}
+          isDisabled={
+            isSubmitting || !values.categoria || !values.status || !values.text
+          }
         >
           Publicar
         </Button>
       ),
     });
-  }, [navigation, isSubmitDisabled, isSubmitting, handleSubmit, onSubmit]);
+  }, [navigation, isSubmitting, handleSubmit, onSubmit]);
 
   const handleRemove = useCallback(
     (id: number | string) => {
       setFieldValue(
         "medias",
-        filter(values.medias, (item) => item.id !== id)
+        filter(values.medias, (item) => item.idMedia !== id)
       );
     },
     [values.medias]
@@ -167,7 +144,7 @@ const CreatePost = ({ navigation, route }: CreatePostScreenProps) => {
     }
 
     const mediaItem = {
-      id: Date.now(),
+      idMedia: Date.now(),
       type:
         pickerResult.type === "image"
           ? MediaTypes.IMAGE
@@ -187,7 +164,12 @@ const CreatePost = ({ navigation, route }: CreatePostScreenProps) => {
         <Box px={4} py={3}>
           <FormControl isRequired isReadOnly>
             <FormControl.Label>Você achou ou perdeu algo?</FormControl.Label>
-            <Select w="full" placeholder="Selecione o status..." mt="1">
+            <Select
+              w="full"
+              placeholder="Selecione o status..."
+              mt="1"
+              onValueChange={handleChange("status")}
+            >
               <Select.Item label="Eu achei algo" value="achado" />
               <Select.Item label="Eu perdi algo" value="perdido" />
             </Select>
@@ -199,12 +181,21 @@ const CreatePost = ({ navigation, route }: CreatePostScreenProps) => {
             <FormControl.Label>
               Selecione a categoria do item que você irá publicar
             </FormControl.Label>
-            <Select w="full" placeholder="Selecione a categoria..." mt="1">
-              <Select.Item label="UX Research" value="ux" />
-              <Select.Item label="Web Development" value="web" />
-              <Select.Item label="Cross Platform Development" value="cross" />
-              <Select.Item label="UI Designing" value="ui" />
-              <Select.Item label="Backend Development" value="backend" />
+            <Select
+              w="full"
+              placeholder="Selecione a categoria..."
+              mt="1"
+              onValueChange={handleChange("categoria")}
+            >
+              {categorias
+                ? categorias.map((categoria) => (
+                    <Select.Item
+                      label={categoria.name}
+                      value={categoria.idCategoria?.toString() ?? ""}
+                      key={categoria.idCategoria}
+                    />
+                  ))
+                : null}
             </Select>
           </FormControl>
         </Box>

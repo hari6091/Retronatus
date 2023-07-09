@@ -13,6 +13,7 @@ export interface IUsuario {
 
 const useUsuario = () => {
   const [usuarios, setUsuarios] = useState<IUsuario[]>();
+  const [me, setMe] = useState<IUsuario>();
 
   async function allUsuarios() {
     try {
@@ -66,8 +67,19 @@ const useUsuario = () => {
     }
   }
 
+  async function getMe() {
+    try {
+      const request = await api.get(`/Usuario/me`).then((response) => {
+        setMe(response.data);
+      });
+    } catch (e) {
+      throw new Error("Algo deu errado usuário logado. " + e);
+    }
+  }
+
   useEffect(() => {
     allUsuarios();
+    getMe();
   }, []);
 
   return {
@@ -75,6 +87,7 @@ const useUsuario = () => {
     getSingleUsuario,
     editUsuario,
     deleteUsuario,
+    me,
   };
 };
 

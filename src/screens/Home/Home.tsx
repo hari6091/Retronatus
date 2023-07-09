@@ -17,8 +17,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Card } from "../../components";
 import { data } from "./MockCards";
 import { screens } from "../../constants";
+import { useLocais } from "../../hooks";
 
 const Home = ({ navigation }: HomeScreenProps) => {
+  const { locais } = useLocais();
   const { isOpen, onOpen, onClose } = useDisclose();
 
   const handleNavigateNewsfeed = async (idLocal: number) => {
@@ -35,25 +37,24 @@ const Home = ({ navigation }: HomeScreenProps) => {
     onClose();
   };
 
-  // const { locais } = useHome();
   return (
     <Center flex={1} flexDirection="column" safeArea px="8" bg="#FFE5A5">
       <Text fontSize="36px" textAlign="center" mb="42px" color="#232831">
         Retronatus
       </Text>
       <FlatList
-        data={data} //deletar e substituir por 'locais'
+        data={locais}
         renderItem={({ item }) => (
           <Box mb="38px">
             <Card
-              idLocal={item.idLocal}
+              idLocal={item.idLocal ?? Math.random()}
               name={item.name}
               address={item.address}
               onPress={handleNavigateNewsfeed}
             />
           </Box>
         )}
-        keyExtractor={(item) => item.idLocal.toString()}
+        keyExtractor={(item) => item.idLocal?.toString() ?? ""}
       />
       <Fab
         renderInPortal={false}

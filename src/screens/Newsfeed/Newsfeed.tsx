@@ -1,6 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Box, FlatList, Fab, Icon } from "native-base";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
 import { screens } from "../../constants";
 import { FeedEmpty, FeedItemNewsfeed } from "./components";
@@ -8,37 +8,8 @@ import { NewsfeedScreenProps, FeedType } from "./types";
 import { IPublicacao, usePublicacoes } from "../../hooks";
 
 const NewsfeedScreen = ({ navigation, route }: NewsfeedScreenProps) => {
-  // const { publicacoes } = usePublicacoes(route.params.idLocal);
-  const publicacoes: IPublicacao[] = [
-    {
-      idPublicacao: 1,
-      content: "Segunda",
-      medias: [],
-      status: "perdido",
-      date: "2023-06-18T23:44:10.417Z",
-      idUsuario: 1,
-      idLocal: 1,
-      idCategoria: 1,
-      comentarios: [
-        {
-          idComentario: 1,
-          content: "comentário",
-          idUsuario: 1,
-          idPublicacao: 1,
-          date: "2023-06-19T01:24:53.693Z",
-          respostas: [],
-        },
-        {
-          idComentario: 5,
-          content: "comentário3",
-          idUsuario: 1,
-          idPublicacao: 1,
-          date: "2023-06-19T01:24:53.693Z",
-          respostas: [],
-        },
-      ],
-    },
-  ];
+  const [local, setLocal] = useState<IPublicacao>();
+  const { publicacoes } = usePublicacoes(route.params.idLocal);
 
   const renderItem = useCallback(
     ({ item }: { item: IPublicacao }) => <FeedItemNewsfeed data={item} />,
@@ -46,15 +17,17 @@ const NewsfeedScreen = ({ navigation, route }: NewsfeedScreenProps) => {
   );
 
   const keyExtractor = useCallback(
-    (item: IPublicacao) => item.idPublicacao.toString(),
+    (item: IPublicacao) =>
+      item.idPublicacao?.toString() ?? Math.random().toString(),
     []
   );
 
   const ItemSeparatorComponent = useCallback(() => <Box mt="3" />, []);
 
   const handleGoToPostCreation = () => {
+    setLocal(publicacoes ? publicacoes[0] : undefined);
     navigation.navigate(screens.CREATE_POST, {
-      eventId: publicacoes[0].idPublicacao,
+      eventId: local?.idLocal ?? 1,
     });
   };
 
@@ -64,7 +37,7 @@ const NewsfeedScreen = ({ navigation, route }: NewsfeedScreenProps) => {
         testID="feed-items"
         flex={1}
         data={publicacoes}
-        ListEmptyComponent={FeedEmpty}
+        ListEmptyComponent={FeedEmpty(local?.idLocal ?? 1)}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ItemSeparatorComponent={ItemSeparatorComponent}

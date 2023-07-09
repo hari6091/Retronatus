@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../../services/api";
 import { IPublicacao } from "..";
 
-interface ICategoria {
+export interface ICategoria {
   idCategoria?: number;
   name: string;
   publicacoes?: IPublicacao[];

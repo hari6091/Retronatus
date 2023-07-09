@@ -26,8 +26,8 @@ export function AuthProvider({ children }: IAuthProvider) {
     password: string;
   }) => {
     try {
-      // const req = await api.post("/Usuario/login", { email, password });
-      const payload = { token: "req.data" };
+      const req = await api.post("/Usuario/login", { email, password });
+      const payload = { token: req.data };
 
       setUser(payload);
       setUserLocalStorage(payload);

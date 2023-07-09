@@ -26,7 +26,7 @@ const CommentItem = ({
 
   useEffect(() => {
     loadUser();
-  });
+  }, []);
 
   const handleReplies = async (values: any) => {
     // await addComment({
@@ -38,6 +38,15 @@ const CommentItem = ({
     // });
   };
 
+  const formattedDate = () => {
+    if (date) {
+      return new Date(date).toLocaleString("pt-br", {
+        dateStyle: "short",
+        timeStyle: "short",
+      });
+    }
+  };
+
   return (
     <VStack {...rest} pr={isReply ? "8" : null}>
       <VStack bg="#ececec" borderRadius="10px" py="12px" pl="12px">
@@ -46,7 +55,7 @@ const CommentItem = ({
             name: usuario?.name ?? "Carregando...",
             profilePicThumb: "",
           }}
-          publishedAt={date}
+          publishedAt={formattedDate()}
         />
 
         <CommentBody

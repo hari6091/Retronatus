@@ -9,8 +9,9 @@ import {
   Link,
   FormControl,
   Input,
+  Toast,
 } from "native-base";
-import React from "react";
+import React, { useState } from "react";
 import * as Yup from "yup";
 
 import { LoginScreenProps, SignInType } from "./types";
@@ -27,10 +28,24 @@ const SignInSchema = () =>
   });
 
 const Login = ({ navigation }: LoginScreenProps) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { signIn } = useAuth();
 
   const handleNavigateToSignup = () => {
     navigation.navigate(screens.SIGNUP);
+  };
+
+  const handleLogin = (values: SignInType) => {
+    setIsLoading(true);
+    try {
+      signIn(values);
+    } catch (error) {
+      Toast.show({
+        title: "Email ou senha incorretos",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const { values, touched, errors, handleChange, handleBlur, handleSubmit } =
@@ -38,7 +53,7 @@ const Login = ({ navigation }: LoginScreenProps) => {
       initialValues: { email: "", password: "" },
       validationSchema: SignInSchema,
       onSubmit: () => {
-        signIn(values);
+        handleLogin(values);
       },
     });
 
@@ -104,6 +119,7 @@ const Login = ({ navigation }: LoginScreenProps) => {
                   borderRadius="10px"
                   bg="#232831"
                   onPress={() => handleSubmit()}
+                  isLoading={isLoading}
                 >
                   Login
                 </Button>

@@ -5,14 +5,15 @@ import { SingleViewPostScreenProps } from "../../../screens/SingleViewPost/types
 export interface IUserFeedCardHeaderProps {
   name: string;
   profilePic: string;
-  status: "achado" | "perdido" | "devolvido";
-  date: string;
+  status: "achado" | "perdido" | "devolvido" | undefined;
+  date: string | undefined;
   publiId: number;
+  isOwner: boolean;
   onRequestDetail: () => void;
 }
 
 export interface IUserProps extends Omit<IStackProps, "children"> {
-  avatar: { source?: string; alt: string; width?: number; height?: number };
+  avatar: { source?: string; width?: number; height?: number };
   name: string;
   bottomElement?: ReactNode;
   rightElement?: ReactNode;

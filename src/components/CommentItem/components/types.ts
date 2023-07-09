@@ -7,7 +7,7 @@ export interface ICommentHeaderProps extends Omit<IStackProps, "children"> {
     name: string;
     profilePicThumb?: string;
   };
-  publishedAt: string;
+  publishedAt: string | undefined;
 }
 
 export interface ICommentBodyProps extends Omit<IStackProps, "children"> {
@@ -18,7 +18,6 @@ export interface ICommentBodyProps extends Omit<IStackProps, "children"> {
 
 export interface ICommentActionsProps extends Omit<IStackProps, "children"> {
   replyAmount?: number;
-  commentId: number;
   comments?: { items: CommentType[]; total: number };
   onComment?: ICommentFormProps["onSubmit"];
   data?: Omit<CommentType, "totalReplies" | "replies">;

@@ -8,7 +8,7 @@ interface ILogin {
 export interface IUser {
   email?: string;
   username?: string;
-  token?: string;
+  token?: { token: string };
 }
 
 export interface IContext extends IUser {

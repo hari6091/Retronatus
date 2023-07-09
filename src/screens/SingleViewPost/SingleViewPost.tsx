@@ -1,5 +1,5 @@
-import { Box, Center, Divider, FlatList, Spinner } from "native-base";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import { Box, Divider, FlatList } from "native-base";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { TextInput } from "react-native";
 
 import {
@@ -8,61 +8,43 @@ import {
   NewsfeedCard,
 } from "../../components";
 import { SingleViewPostScreenProps } from "./types";
-import { IComentario, IPublicacao } from "../../hooks";
+import {
+  IComentario,
+  IPublicacao,
+  useComentarios,
+  usePublicacoes,
+  useUsuario,
+} from "../../hooks";
 
 const SingleViewPostScreen = ({
   navigation,
   route,
 }: SingleViewPostScreenProps) => {
-  const feedItem: IPublicacao = {
-    idPublicacao: 1,
-    content: "Segunda",
-    medias: [],
-    status: "perdido",
-    date: "2023-06-18T23:44:10.417Z",
-    idUsuario: 1,
-    idLocal: 1,
-    idCategoria: 1,
-    comentarios: [
-      {
-        idComentario: 1,
-        content: "comentário",
-        idUsuario: 1,
-        idPublicacao: 1,
-        date: "2023-06-19T01:24:53.693Z",
-        respostas: [],
-      },
-      {
-        idComentario: 5,
-        content: "comentário3",
-        idUsuario: 1,
-        idPublicacao: 1,
-        date: "2023-06-19T01:24:53.693Z",
-        respostas: [],
-      },
-    ],
-  };
+  const { getSinglePublicacao } = usePublicacoes();
+  const { comentarios } = useComentarios(route.params.feedId);
+  const [feedItem, setFeedItem] = useState<IPublicacao>();
+
+  const loadPubli = useCallback(async () => {
+    const getPubli = await getSinglePublicacao(route.params.feedId);
+    setFeedItem(getPubli);
+  }, [route.params.feedId]);
+
+  useEffect(() => {
+    loadPubli();
+  }, []);
 
   const commentInputRef = useRef<TextInput>(null);
 
   const [isCommentInputVisible, setIsCommentInputVisible] =
     useState<boolean>(false);
 
-  const handleComment = async (values: any) => {
-    // await addComment({
-    //   comment: {
-    //     text: values?.text,
-    //   },
-    //   feedId: feedItem.id,
-    // });
-  };
-
   const renderItem = ({ item }: { item: IComentario }) => (
     <CommentItemWithReplies data={item} bgColor="white" px="4" />
   );
 
   const keyExtractor = useCallback(
-    (item: IComentario) => item.idComentario.toString(),
+    (item: IComentario) =>
+      item.idComentario?.toString() ?? Math.random().toString(),
     []
   );
 
@@ -84,8 +66,7 @@ const SingleViewPostScreen = ({
           <Box bgColor="white" p="4">
             <Divider mb="4" />
             <CommentForm
-              feedId={feedItem.idPublicacao}
-              onSubmit={handleComment}
+              feedId={route.params.feedId}
               commentInputRef={commentInputRef}
             />
             <Divider mt="4" />
@@ -107,7 +88,7 @@ const SingleViewPostScreen = ({
     <Box testID="single-view-post" flex={1} safeAreaX>
       <FlatList
         flex={1}
-        data={feedItem.comentarios}
+        data={comentarios}
         ListHeaderComponent={ListHeaderComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
         renderItem={renderItem}

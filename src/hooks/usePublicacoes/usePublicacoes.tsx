@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../../services/api";
 import { IComentario } from "..";
 
-type Media = {
+export type Media = {
   idMedia: number;
   source: string;
   type: string;
@@ -10,18 +10,18 @@ type Media = {
 };
 
 export interface IPublicacao {
-  idPublicacao: number;
+  idPublicacao?: number;
   content: string;
   medias: Media[];
   status: "achado" | "perdido" | "devolvido";
-  date: string;
+  date?: string;
   idUsuario: number;
   idLocal: number;
   idCategoria: number;
-  comentarios: IComentario[];
+  comentarios?: IComentario[];
 }
 
-const usePublicacao = (idLocal: number) => {
+const usePublicacao = (idLocal?: number) => {
   const [publicacoes, setPublicacoes] = useState<IPublicacao[]>();
 
   async function allPublicacaoByLocal(idLocal: number) {
@@ -50,6 +50,7 @@ const usePublicacao = (idLocal: number) => {
         idUsuario,
         idLocal,
         idCategoria,
+        date: new Date(Date.now()),
       });
 
       return request.data;
@@ -108,18 +109,22 @@ const usePublicacao = (idLocal: number) => {
 
   async function getUsuarioPublicacoes(
     idUsuario: number
-  ): Promise<IPublicacao> {
+  ): Promise<IPublicacao[]> {
     try {
-      const request = await api.get(`/Publicacao/${idUsuario}`);
+      const request = await api.get(`/Publicacao/usuario/${idUsuario}`);
 
       return request.data;
     } catch (e) {
-      throw new Error("Algo deu errado ao buscar uma Publicação. " + e);
+      throw new Error(
+        "Algo deu errado ao buscar as publicações de um usuário. " + e
+      );
     }
   }
 
   useEffect(() => {
-    allPublicacaoByLocal(idLocal);
+    if (idLocal) {
+      allPublicacaoByLocal(idLocal);
+    }
   }, []);
 
   return {

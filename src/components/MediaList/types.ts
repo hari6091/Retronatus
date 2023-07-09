@@ -6,9 +6,10 @@ export enum MediaTypes {
 }
 
 export type MediaItemType = {
-  id: number | string;
+  idMedia: number;
   type: MediaTypes.IMAGE | MediaTypes.VIDEO;
   source: string;
+  idPublicacao: number;
 };
 
 export interface IMediaItemProps extends ICenterProps {

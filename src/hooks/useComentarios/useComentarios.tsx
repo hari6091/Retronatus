@@ -3,15 +3,15 @@ import api from "../../services/api";
 import { IResposta } from "..";
 
 export interface IComentario {
-  idComentario: number;
+  idComentario?: number;
   content: string;
   idUsuario: number;
   idPublicacao: number;
-  date: string;
-  respostas: IResposta[];
+  date: Date;
+  respostas?: IResposta[];
 }
 
-const useComentarios = (idPublicacao: number) => {
+const useComentarios = (idPublicacao?: number) => {
   const [comentarios, setComentarios] = useState<IComentario[]>();
 
   async function allComentarioByPublicacao(idPublicacao: number) {
@@ -30,13 +30,14 @@ const useComentarios = (idPublicacao: number) => {
     content,
     idPublicacao,
     idUsuario,
+    date,
   }: IComentario) {
     try {
       const request = await api.post("/Comentario", {
         content,
         idPublicacao,
         idUsuario,
-        date: new Date(),
+        date,
       });
 
       return request.data;
@@ -89,7 +90,9 @@ const useComentarios = (idPublicacao: number) => {
   }
 
   useEffect(() => {
-    allComentarioByPublicacao(idPublicacao);
+    if (idPublicacao) {
+      allComentarioByPublicacao(idPublicacao);
+    }
   }, []);
 
   return {

@@ -6,7 +6,6 @@ import { CommentForm } from "../../CommentForm";
 
 const CommentActions = ({
   replyAmount = 0,
-  commentId,
   data,
   onComment,
   isReply,

@@ -8,7 +8,6 @@ import {
   Input,
   KeyboardAvoidingView,
   ScrollView,
-  Select,
   Toast,
 } from "native-base";
 import { useFormik } from "formik";
@@ -21,26 +20,16 @@ const CreateLocal = ({ navigation }: CreateLocalScreenProps) => {
     handleChange,
     handleBlur,
     handleSubmit,
-    resetForm,
     isValid,
     isSubmitting,
   } = useFormik<LocalType>({
     initialValues: { name: "", address: "" },
     onSubmit: async () => {
-      if (isSubmitDisabled) {
-        return;
-      }
       await onSubmit(values);
-      resetForm();
     },
   });
-  const hasContent = values.name && values.address;
-  const isSubmitDisabled = !hasContent || isSubmitting;
 
   const onSubmit = async (props: LocalType) => {
-    if (isSubmitDisabled) {
-      return;
-    }
     try {
       await createLocal(props);
       navigation.goBack();
@@ -68,14 +57,14 @@ const CreateLocal = ({ navigation }: CreateLocalScreenProps) => {
           _text={{ color: "black", fontSize: 18, fontWeight: 700 }}
           _pressed={{ backgroundColor: "rgba(0,0,0,0)" }}
           onPress={() => handleSubmit()}
-          isDisabled={isSubmitDisabled}
+          isDisabled={!values.address || !values.name}
           isLoading={isSubmitting}
         >
           Criar
         </Button>
       ),
     });
-  }, [navigation, isSubmitDisabled, isSubmitting, handleSubmit, onSubmit]);
+  }, [navigation, isSubmitting, handleSubmit, onSubmit]);
 
   return (
     <KeyboardAvoidingView flex={1}>

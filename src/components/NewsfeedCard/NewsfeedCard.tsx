@@ -14,20 +14,25 @@ const NewsfeedCard = ({
   ...rest
 }: INewsfeedCardProps) => {
   const navigation = useNavigation<SingleViewPostScreenProps["navigation"]>();
-  const { idPublicacao, idUsuario, content, status, date } = data;
+
+  const { idPublicacao, idUsuario, content, status, date } = data || {};
+
+  const { me } = useUsuario();
 
   const [usuario, setUsuario] = useState<IUsuario>();
 
   const { getSingleUsuario } = useUsuario();
 
   const loadUser = useCallback(async () => {
-    const getUser = await getSingleUsuario(idUsuario);
-    setUsuario(getUser);
+    if (idUsuario) {
+      const getUser = await getSingleUsuario(idUsuario);
+      setUsuario(getUser);
+    }
   }, [idUsuario]);
 
   useEffect(() => {
     loadUser();
-  });
+  }, []);
 
   const handlePressComment = useCallback(async () => {
     if (onPressComment) {
@@ -39,13 +44,17 @@ const NewsfeedCard = ({
   }, [commentInputRef]);
 
   const handleOpenSingleViewPost = () => {
-    navigation.navigate(screens.SINGLE_VIEW_POST, { feedId: idPublicacao });
+    navigation.navigate(screens.SINGLE_VIEW_POST, {
+      feedId: idPublicacao ?? 1,
+    });
   };
 
+  const isOwner = me?.idUsuario === idUsuario;
   return (
     <VStack {...rest}>
       <Header
-        publiId={idPublicacao}
+        isOwner={isOwner}
+        publiId={idPublicacao ?? Math.random()}
         name={usuario?.name ?? "Carregando..."}
         profilePic=""
         status={status}
@@ -58,7 +67,7 @@ const NewsfeedCard = ({
       />
       <Stats
         navigation={navigation}
-        commentsAmount={data.comentarios?.length}
+        commentsAmount={data?.comentarios?.length}
         onRequestDetail={handleOpenSingleViewPost}
       />
       <Actions onPressComment={handlePressComment} />
