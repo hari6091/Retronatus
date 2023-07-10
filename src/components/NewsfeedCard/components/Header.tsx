@@ -49,8 +49,7 @@ const UserFeedCard = ({
 }: IUserFeedCardHeaderProps) => {
   const [publicacao, setPublicacao] = useState<IPublicacao>();
 
-  const { editPublicacao, getSinglePublicacao, deletePublicacao } =
-    usePublicacoes();
+  const { getSinglePublicacao, deletePublicacao } = usePublicacoes();
   const navigation = useNavigation<SingleViewPostScreenProps["navigation"]>();
 
   const [isOpen, setIsOpen] = React.useState(false);

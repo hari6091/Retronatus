@@ -7,11 +7,21 @@ export type CardType = {
   name: string;
   address: string;
   onPress?: (idLocal: number) => void;
+  onLongPress?: (idLocal: number) => void;
 };
 
-export const Card = ({ idLocal, name, address, onPress }: CardType) => {
+export const Card = ({
+  idLocal,
+  name,
+  address,
+  onPress,
+  onLongPress,
+}: CardType) => {
   return (
-    <Pressable onPress={() => onPress?.(idLocal)}>
+    <Pressable
+      onPress={() => onPress?.(idLocal)}
+      onLongPress={() => onLongPress?.(idLocal)}
+    >
       <HStack
         bg="#EBE8E1"
         w="full"
