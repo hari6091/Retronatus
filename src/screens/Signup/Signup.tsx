@@ -10,6 +10,7 @@ import {
   Link,
   Input,
   FormControl,
+  Toast,
 } from "native-base";
 import React from "react";
 import * as Yup from "yup";
@@ -30,15 +31,20 @@ const SignUpSchema = () =>
   });
 
 const Signup = ({ navigation }: SignupScreenProps) => {
-  // const { signUp } = useAuth();
+  const { signUp } = useAuth();
 
-  const handleSignUp = (values: SignupType) => {
-    console.log(values); // deletar
-    // try {
-    //   await signUp(values);
-    // } catch (err) {
-    //   console.log('Algo deu errado');
-    // }
+  const handleSignUp = async (values: SignupType) => {
+    try {
+      await signUp(values);
+      navigation.goBack();
+      Toast.show({
+        title: "Cadastro realizado! Efetue o login",
+      });
+    } catch (err) {
+      Toast.show({
+        title: "Algo deu errado, tente novamente mais tarde.",
+      });
+    }
   };
 
   const {
@@ -49,6 +55,7 @@ const Signup = ({ navigation }: SignupScreenProps) => {
     handleBlur,
     handleSubmit,
     setFieldError,
+    isSubmitting,
   } = useFormik({
     initialValues: { name: "", email: "", password: "", confPassword: "" },
     validationSchema: SignUpSchema,
@@ -163,6 +170,8 @@ const Signup = ({ navigation }: SignupScreenProps) => {
                   borderRadius="10px"
                   bg="#232831"
                   onPress={() => handleSubmit()}
+                  isLoading={isSubmitting}
+                  isDisabled={isSubmitting}
                 >
                   Cadastrar-se
                 </Button>

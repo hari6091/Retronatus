@@ -20,11 +20,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Card } from "../../components";
 import { data } from "./MockCards";
 import { screens } from "../../constants";
-import { useLocais } from "../../hooks";
+import { useLocais, useUsuario } from "../../hooks";
 import { ILocal } from "../../hooks/useLocais/useLocais";
 
 const Home = ({ navigation }: HomeScreenProps) => {
   const { allLocais, deleteLocal } = useLocais();
+  const { me } = useUsuario();
   const { isOpen, onOpen, onClose } = useDisclose();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -78,7 +79,7 @@ const Home = ({ navigation }: HomeScreenProps) => {
 
   const handleDeleteLocal = async () => {
     try {
-      if (localToDelete) {
+      if (localToDelete && me?.is_Super_Admin) {
         await deleteLocal(localToDelete);
         onCloseDelete();
         loadLocais();
@@ -111,17 +112,19 @@ const Home = ({ navigation }: HomeScreenProps) => {
         )}
         keyExtractor={(item) => item.idLocal?.toString() ?? ""}
       />
-      <Fab
-        renderInPortal={false}
-        right={6}
-        bottom={18}
-        shadow={3}
-        w="64px"
-        h="64px"
-        bg="#232831"
-        icon={<Icon color="white" as={MaterialIcons} name="add" size="md" />}
-        onPress={onOpen}
-      />
+      {me?.is_Super_Admin ? (
+        <Fab
+          renderInPortal={false}
+          right={6}
+          bottom={18}
+          shadow={3}
+          w="64px"
+          h="64px"
+          bg="#232831"
+          icon={<Icon color="white" as={MaterialIcons} name="add" size="md" />}
+          onPress={onOpen}
+        />
+      ) : null}
 
       <Actionsheet isOpen={isOpen} onClose={onClose}>
         <Actionsheet.Content>
