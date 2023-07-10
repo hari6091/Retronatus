@@ -7,6 +7,5 @@ export interface ProfileHeaderProps {
   user: Record<string, any>;
   isOwner?: boolean;
   onEditProfile?: () => void;
-  onReport: () => void;
   isAdmin: boolean;
 }

@@ -21,14 +21,12 @@ export interface IPublicacao {
   comentarios?: IComentario[];
 }
 
-const usePublicacao = (idLocal?: number) => {
-  const [publicacoes, setPublicacoes] = useState<IPublicacao[]>();
-
+const usePublicacao = () => {
   async function allPublicacaoByLocal(idLocal: number) {
     try {
-      await api.get(`/Publicacao/GetByLocal/${idLocal}`).then((response) => {
-        setPublicacoes(response.data);
-      });
+      const request = await api.get(`/Publicacao/GetByLocal/${idLocal}`);
+
+      return request.data;
     } catch (e) {
       throw new Error("Algo deu errado ao listar as Publicações. " + e);
     }
@@ -121,14 +119,8 @@ const usePublicacao = (idLocal?: number) => {
     }
   }
 
-  useEffect(() => {
-    if (idLocal) {
-      allPublicacaoByLocal(idLocal);
-    }
-  }, []);
-
   return {
-    publicacoes,
+    allPublicacaoByLocal,
     createPublicacao,
     getSinglePublicacao,
     editPublicacao,

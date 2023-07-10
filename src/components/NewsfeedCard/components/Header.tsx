@@ -10,11 +10,13 @@ import {
   AlertDialog,
 } from "native-base";
 import React, { useCallback, useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 import User from "./User";
 import { IUserFeedCardHeaderProps } from "./types";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { IPublicacao, usePublicacoes } from "../../../hooks";
+import { SingleViewPostScreenProps } from "../../../screens/SingleViewPost/types";
 
 const Icon = ({
   type,
@@ -39,11 +41,17 @@ const UserFeedCard = ({
   publiId,
   onRequestDetail,
   isOwner,
+  isSingleView,
+  onPressPerdido,
+  onPressAchado,
+  onPressDevolvido,
   ...rest
 }: IUserFeedCardHeaderProps) => {
   const [publicacao, setPublicacao] = useState<IPublicacao>();
+
   const { editPublicacao, getSinglePublicacao, deletePublicacao } =
     usePublicacoes();
+  const navigation = useNavigation<SingleViewPostScreenProps["navigation"]>();
 
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -60,45 +68,14 @@ const UserFeedCard = ({
     loadPubli();
   }, []);
 
-  const handlePressDevolvido = async () => {
-    if (publicacao) {
-      try {
-        await editPublicacao({ ...publicacao, status: "devolvido" });
-        await loadPubli();
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
-
-  const handlePressPerdido = async () => {
-    if (publicacao) {
-      try {
-        await editPublicacao({ ...publicacao, status: "perdido" });
-        await loadPubli();
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
-
-  const handlePressAchado = async () => {
-    if (publicacao) {
-      try {
-        await editPublicacao({ ...publicacao, status: "achado" });
-        await loadPubli();
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
-
   const handlePressDelete = async () => {
     if (publicacao) {
       try {
         await deletePublicacao(publiId);
         onClose();
-        loadPubli();
+        if (isSingleView) {
+          navigation.goBack();
+        }
       } catch (e) {
         console.log(e);
       }
@@ -127,9 +104,9 @@ const UserFeedCard = ({
             {status && <Icon type={status} />}
             {isOwner ? (
               <MoreOptionsAccessory
-                onClickAchado={handlePressAchado}
-                onClickDevolvido={handlePressDevolvido}
-                onClickPerdido={handlePressPerdido}
+                onClickAchado={onPressAchado}
+                onClickDevolvido={onPressDevolvido}
+                onClickPerdido={onPressPerdido}
                 onClickDelete={() => setIsOpen(!isOpen)}
                 status={status}
               />

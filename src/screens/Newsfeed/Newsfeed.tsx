@@ -1,15 +1,36 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Box, FlatList, Fab, Icon } from "native-base";
-import React, { useCallback, useState } from "react";
-
+import React, { useCallback, useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { screens } from "../../constants";
 import { FeedEmpty, FeedItemNewsfeed } from "./components";
-import { NewsfeedScreenProps, FeedType } from "./types";
+import { NewsfeedScreenProps } from "./types";
 import { IPublicacao, usePublicacoes } from "../../hooks";
 
 const NewsfeedScreen = ({ navigation, route }: NewsfeedScreenProps) => {
-  const [local, setLocal] = useState<IPublicacao>();
-  const { publicacoes } = usePublicacoes(route.params.idLocal);
+  const { allPublicacaoByLocal } = usePublicacoes();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [publicacoes, setPublicacoes] = useState<IPublicacao[]>();
+
+  const loadPublicacoes = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const getPublicacoes = await allPublicacaoByLocal(route.params.idLocal);
+      setPublicacoes(getPublicacoes);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [navigation]);
+
+  useEffect(() => {
+    loadPublicacoes();
+  }, [navigation]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadPublicacoes();
+    }, [loadPublicacoes])
+  );
 
   const renderItem = useCallback(
     ({ item }: { item: IPublicacao }) => <FeedItemNewsfeed data={item} />,
@@ -25,9 +46,8 @@ const NewsfeedScreen = ({ navigation, route }: NewsfeedScreenProps) => {
   const ItemSeparatorComponent = useCallback(() => <Box mt="3" />, []);
 
   const handleGoToPostCreation = () => {
-    setLocal(publicacoes ? publicacoes[0] : undefined);
     navigation.navigate(screens.CREATE_POST, {
-      eventId: local?.idLocal ?? 1,
+      eventId: route.params.idLocal,
     });
   };
 
@@ -37,7 +57,9 @@ const NewsfeedScreen = ({ navigation, route }: NewsfeedScreenProps) => {
         testID="feed-items"
         flex={1}
         data={publicacoes}
-        ListEmptyComponent={FeedEmpty(local?.idLocal ?? 1)}
+        onRefresh={() => loadPublicacoes()}
+        refreshing={isLoading}
+        ListEmptyComponent={FeedEmpty(route.params.idLocal)}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ItemSeparatorComponent={ItemSeparatorComponent}

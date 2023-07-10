@@ -28,7 +28,6 @@ const SignInSchema = () =>
   });
 
 const Login = ({ navigation }: LoginScreenProps) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { signIn } = useAuth();
 
   const handleNavigateToSignup = () => {
@@ -36,26 +35,30 @@ const Login = ({ navigation }: LoginScreenProps) => {
   };
 
   const handleLogin = (values: SignInType) => {
-    setIsLoading(true);
     try {
       signIn(values);
     } catch (error) {
       Toast.show({
         title: "Email ou senha incorretos",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const { values, touched, errors, handleChange, handleBlur, handleSubmit } =
-    useFormik({
-      initialValues: { email: "", password: "" },
-      validationSchema: SignInSchema,
-      onSubmit: () => {
-        handleLogin(values);
-      },
-    });
+  const {
+    values,
+    touched,
+    errors,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    isSubmitting,
+  } = useFormik({
+    initialValues: { email: "", password: "" },
+    validationSchema: SignInSchema,
+    onSubmit: () => {
+      handleLogin(values);
+    },
+  });
 
   const getErrorMsg = (field: keyof typeof values) => {
     return touched[field] ? errors[field] : undefined;
@@ -119,7 +122,8 @@ const Login = ({ navigation }: LoginScreenProps) => {
                   borderRadius="10px"
                   bg="#232831"
                   onPress={() => handleSubmit()}
-                  isLoading={isLoading}
+                  isLoading={isSubmitting}
+                  isDisabled={isSubmitting}
                 >
                   Login
                 </Button>

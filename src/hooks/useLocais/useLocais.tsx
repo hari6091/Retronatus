@@ -3,7 +3,7 @@ import api from "../../services/api";
 import { IPublicacao } from "..";
 import { AuthContext } from "../../contexts";
 
-interface ILocal {
+export interface ILocal {
   idLocal?: number;
   name: string;
   address: string;
@@ -11,13 +11,10 @@ interface ILocal {
 }
 
 const useLocais = () => {
-  const [locais, setLocais] = useState<ILocal[]>();
-
   async function allLocais() {
     try {
-      await api.get("/Local").then((response) => {
-        setLocais(response.data);
-      });
+      const request = await api.get("/Local");
+      return request.data;
     } catch (e) {
       throw new Error("Algo deu errado ao listar os locais. " + e);
     }
@@ -70,11 +67,7 @@ const useLocais = () => {
     }
   }
 
-  useEffect(() => {
-    allLocais();
-  }, []);
-
-  return { locais, createLocal, getSingleLocal, editLocal, deleteLocal };
+  return { allLocais, createLocal, getSingleLocal, editLocal, deleteLocal };
 };
 
 export default useLocais;

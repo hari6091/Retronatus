@@ -52,6 +52,7 @@ const SingleViewPostScreen = ({
     !route.params.feedId ? null : (
       <>
         <NewsfeedCard
+          isSingleView
           data={feedItem}
           bgColor="white"
           px="4"

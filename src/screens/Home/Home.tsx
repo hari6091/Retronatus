@@ -9,19 +9,44 @@ import {
   Fab,
   useDisclose,
   Actionsheet,
+  Spinner,
 } from "native-base";
-import React from "react";
-
+import React, { useCallback, useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { HomeScreenProps } from "./types";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Card } from "../../components";
 import { data } from "./MockCards";
 import { screens } from "../../constants";
 import { useLocais } from "../../hooks";
+import { ILocal } from "../../hooks/useLocais/useLocais";
 
 const Home = ({ navigation }: HomeScreenProps) => {
-  const { locais } = useLocais();
+  const { allLocais } = useLocais();
   const { isOpen, onOpen, onClose } = useDisclose();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [locais, setLocais] = useState<ILocal[]>();
+
+  const loadLocais = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const getLocais = await allLocais();
+      setLocais(getLocais);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [navigation]);
+
+  useEffect(() => {
+    loadLocais();
+  }, [navigation]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadLocais();
+    }, [loadLocais])
+  );
 
   const handleNavigateNewsfeed = async (idLocal: number) => {
     navigation.navigate(screens.NEWSFEED, { idLocal });
@@ -42,8 +67,11 @@ const Home = ({ navigation }: HomeScreenProps) => {
       <Text fontSize="36px" textAlign="center" mb="42px" color="#232831">
         Retronatus
       </Text>
+
       <FlatList
         data={locais}
+        onRefresh={() => loadLocais()}
+        refreshing={isLoading}
         renderItem={({ item }) => (
           <Box mb="38px">
             <Card

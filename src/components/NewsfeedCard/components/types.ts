@@ -10,6 +10,10 @@ export interface IUserFeedCardHeaderProps {
   publiId: number;
   isOwner: boolean;
   onRequestDetail: () => void;
+  isSingleView?: boolean;
+  onPressPerdido: () => void;
+  onPressAchado: () => void;
+  onPressDevolvido: () => void;
 }
 
 export interface IUserProps extends Omit<IStackProps, "children"> {

@@ -1,6 +1,7 @@
 import { Center, ScrollView } from "native-base";
 
 import React, { useCallback, useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 
 import { ProfileScreenProps } from "./types";
 import { IPublicacao, useAuth, usePublicacoes, useUsuario } from "../../hooks";
@@ -14,7 +15,7 @@ const Profile = ({ navigation, route }: ProfileScreenProps) => {
 
   const userId = route.params?.userId ?? me?.idUsuario;
 
-  const { getUsuarioPublicacoes } = usePublicacoes(userId);
+  const { getUsuarioPublicacoes } = usePublicacoes();
 
   const [publi, setPubli] = useState<IPublicacao[]>();
 
@@ -34,6 +35,12 @@ const Profile = ({ navigation, route }: ProfileScreenProps) => {
     loadPubli();
   }, [userId]);
 
+  useFocusEffect(
+    useCallback(() => {
+      loadPubli();
+    }, [loadPubli])
+  );
+
   // const handleNavigateLogin = async () => {
   //   await logout();
   //   navigation.navigate(screens.WELCOME);
@@ -46,7 +53,6 @@ const Profile = ({ navigation, route }: ProfileScreenProps) => {
           user={me!}
           isAdmin={me?.is_Super_Admin || false}
           // onEditProfile={() => setEditing(true)}
-          onReport={navigation.goBack}
         />
 
         <UserActivity
