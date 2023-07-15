@@ -65,6 +65,11 @@ const Home = ({ navigation }: HomeScreenProps) => {
     onClose();
   };
 
+  const handleNavigateSeeFeedbacks = () => {
+    navigation.navigate(screens.CHECK_FEEDBACKS);
+    onClose();
+  };
+
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
   const [localToDelete, setLocalToDelete] = React.useState<number>();
 
@@ -124,7 +129,19 @@ const Home = ({ navigation }: HomeScreenProps) => {
           icon={<Icon color="white" as={MaterialIcons} name="add" size="md" />}
           onPress={onOpen}
         />
-      ) : null}
+      ) : (
+        <Fab
+          renderInPortal={false}
+          right={6}
+          bottom={18}
+          shadow={3}
+          w="64px"
+          h="64px"
+          bg="#232831"
+          icon={<Icon color="white" as={MaterialIcons} name="add" size="md" />}
+          onPress={() => navigation.navigate(screens.FEEDBACK)}
+        />
+      )}
 
       <Actionsheet isOpen={isOpen} onClose={onClose}>
         <Actionsheet.Content>
@@ -133,6 +150,9 @@ const Home = ({ navigation }: HomeScreenProps) => {
           </Actionsheet.Item>
           <Actionsheet.Item onPress={handleNavigateAddCategory}>
             Adicionar nova categoria
+          </Actionsheet.Item>
+          <Actionsheet.Item onPress={handleNavigateSeeFeedbacks}>
+            Avaliar Solicitações
           </Actionsheet.Item>
         </Actionsheet.Content>
       </Actionsheet>

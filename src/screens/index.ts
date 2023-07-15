@@ -9,3 +9,5 @@ export * from "./SingleViewPost";
 export * from "./CreatePost";
 export * from "./CreateLocal";
 export * from "./CreateCategory";
+export * from "./Feedback";
+export * from "./CheckFeedbacks";

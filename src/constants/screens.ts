@@ -11,6 +11,8 @@ enum Screens {
   CREATE_POST = "Create Post",
   CREATE_CATEGORY = "Create Category",
   CREATE_LOCAL = "Create Local",
+  FEEDBACK = "Feedback",
+  CHECK_FEEDBACKS = "Check Feedbacks",
 }
 
 export default Screens;

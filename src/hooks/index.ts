@@ -6,3 +6,4 @@ export * from "./useComentarios";
 export * from "./useRespostas";
 export * from "./useUsuario";
 export * from "./useCategorias";
+export * from "./useFeedbacks";
