@@ -13,7 +13,7 @@ const Profile = ({ navigation, route }: ProfileScreenProps) => {
   const { me } = useUsuario();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const userId = route.params?.userId ?? me?.idUsuario;
+  const userId = me?.idUsuario;
 
   const { getUsuarioPublicacoes } = usePublicacoes();
 
@@ -56,7 +56,8 @@ const Profile = ({ navigation, route }: ProfileScreenProps) => {
         />
 
         <UserActivity
-          items={publi ?? []}
+          onPublicacaoDeleted={loadPubli}
+          items={publi?.reverse() ?? []}
           loading={isLoading}
           user={me!}
           isOwner

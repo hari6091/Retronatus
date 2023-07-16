@@ -7,13 +7,13 @@ export interface IUserFeedCardHeaderProps {
   profilePic: string;
   status: "achado" | "perdido" | "devolvido" | undefined;
   date: string | undefined;
-  publiId: number;
+  publiId: number | undefined;
   isOwner: boolean;
   onRequestDetail: () => void;
-  isSingleView?: boolean;
   onPressPerdido: () => void;
   onPressAchado: () => void;
   onPressDevolvido: () => void;
+  onPressDelete: () => void;
 }
 
 export interface IUserProps extends Omit<IStackProps, "children"> {

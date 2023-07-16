@@ -22,11 +22,13 @@ export default function UserProfileActivityTab({
   loading,
   user,
   isOwner,
+  onPublicacaoDeleted,
 }: {
   items: IPublicacao[];
   loading: boolean;
   user: Record<string, any>;
   isOwner?: boolean;
+  onPublicacaoDeleted: () => void;
 }) {
   const empty = !loading && items.length === 0;
 
@@ -61,7 +63,10 @@ export default function UserProfileActivityTab({
     <View>
       {items.map((item) => (
         <Box m="10px" key={item.idPublicacao}>
-          <FeedItemNewsfeed data={item} />
+          <FeedItemNewsfeed
+            onPublicacaoDeleted={onPublicacaoDeleted}
+            data={item}
+          />
         </Box>
       ))}
 

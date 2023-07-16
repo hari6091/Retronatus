@@ -67,7 +67,6 @@ const CommentItem = ({
       </VStack>
       <CommentActions
         replyAmount={respostas?.length ?? 0}
-        commentId={idComentario}
         onComment={handleReplies}
         data={data}
         mt="3"
