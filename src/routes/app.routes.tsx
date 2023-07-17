@@ -12,6 +12,8 @@ import {
   Signup,
   SingleViewPost,
   Welcome,
+  Feedback,
+  CheckFeedbacks,
 } from "../screens";
 import { useAuth } from "../hooks";
 import MainTabScreen from "./MainTabScreen";
@@ -54,6 +56,16 @@ export const AppRoutes = () => {
             name={screens.CREATE_CATEGORY}
             component={CreateCategory}
             options={{ headerShown: true, title: "Adicionar nova categoria" }}
+          />
+          <MainStack.Screen
+            name={screens.FEEDBACK}
+            component={Feedback}
+            options={{ headerShown: true, title: "Solicitar novo local" }}
+          />
+          <MainStack.Screen
+            name={screens.CHECK_FEEDBACKS}
+            component={CheckFeedbacks}
+            options={{ headerShown: true, title: "Avaliar Feedbacks" }}
           />
         </MainStack.Group>
       ) : (

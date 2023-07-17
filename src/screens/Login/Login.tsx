@@ -91,6 +91,8 @@ const Login = ({ navigation }: LoginScreenProps) => {
                   borderRightWidth="0"
                   borderTopWidth="0"
                   borderRadius="0"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
                   onChangeText={handleChange("email")}
                   onBlur={handleBlur("email")}
                 />
@@ -108,6 +110,7 @@ const Login = ({ navigation }: LoginScreenProps) => {
                   borderRightWidth="0"
                   borderTopWidth="0"
                   borderRadius="0"
+                  autoCapitalize="none"
                   onChangeText={handleChange("password")}
                   onBlur={handleBlur("password")}
                 />

@@ -24,6 +24,8 @@ export type RootStackParamList = {
   [screens.CREATE_POST]: { eventId: number };
   [screens.CREATE_LOCAL]: undefined;
   [screens.CREATE_CATEGORY]: undefined;
+  [screens.FEEDBACK]: undefined;
+  [screens.CHECK_FEEDBACKS]: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
