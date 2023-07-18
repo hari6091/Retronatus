@@ -14,6 +14,7 @@ export interface IUserFeedCardHeaderProps {
   onPressAchado: () => void;
   onPressDevolvido: () => void;
   onPressDelete: () => void;
+  onUserClick: () => void;
 }
 
 export interface IUserProps extends Omit<IStackProps, "children"> {

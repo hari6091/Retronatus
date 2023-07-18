@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import api from "../../services/api";
 
 export interface IResposta {
-  idResposta: number;
+  idResposta?: number;
   idUsuario: number;
-  idComentario: number;
+  idComentario: number | undefined;
   content: string;
-  date: string;
+  date: Date;
 }
 
-const useRespostas = (idComentario: number) => {
+const useRespostas = (idComentario: number | undefined) => {
   const [respostas, setRespostas] = useState<IResposta[]>();
 
   async function allRespostasByComentario(idComentario: number) {
@@ -28,13 +28,14 @@ const useRespostas = (idComentario: number) => {
     idUsuario,
     idComentario,
     content,
+    date,
   }: IResposta) {
     try {
       const request = await api.post("/Resposta", {
         content,
         idComentario,
         idUsuario,
-        date: new Date(),
+        date,
       });
 
       return request.data;
@@ -85,7 +86,9 @@ const useRespostas = (idComentario: number) => {
   }
 
   useEffect(() => {
-    allRespostasByComentario(idComentario);
+    if (idComentario) {
+      allRespostasByComentario(idComentario);
+    }
   }, []);
 
   return {

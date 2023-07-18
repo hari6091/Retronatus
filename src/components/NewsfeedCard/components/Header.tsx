@@ -45,6 +45,7 @@ const UserFeedCard = ({
   onPressAchado,
   onPressDevolvido,
   onPressDelete,
+  onUserClick,
   ...rest
 }: IUserFeedCardHeaderProps) => {
   const formattedDate = () => {
@@ -63,7 +64,7 @@ const UserFeedCard = ({
           source: profilePic,
         }}
         name={name}
-        // onUserPress={onUserAvatarPress}
+        onUserPress={onUserClick}
         rightElement={
           <HStack space="5">
             {status && <Icon type={status} />}

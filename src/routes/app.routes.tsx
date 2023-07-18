@@ -14,6 +14,7 @@ import {
   Welcome,
   Feedback,
   CheckFeedbacks,
+  UserProfile,
 } from "../screens";
 import { useAuth } from "../hooks";
 import MainTabScreen from "./MainTabScreen";
@@ -65,6 +66,11 @@ export const AppRoutes = () => {
           <MainStack.Screen
             name={screens.CHECK_FEEDBACKS}
             component={CheckFeedbacks}
+            options={{ headerShown: true, title: "Avaliar Feedbacks" }}
+          />
+          <MainStack.Screen
+            name={screens.USER_PROFILE}
+            component={UserProfile}
             options={{ headerShown: true, title: "Avaliar Feedbacks" }}
           />
         </MainStack.Group>

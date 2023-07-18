@@ -11,3 +11,4 @@ export * from "./CreateLocal";
 export * from "./CreateCategory";
 export * from "./Feedback";
 export * from "./CheckFeedbacks";
+export * from "./UserProfile";

@@ -13,6 +13,7 @@ enum Screens {
   CREATE_LOCAL = "Create Local",
   FEEDBACK = "Feedback",
   CHECK_FEEDBACKS = "Check Feedbacks",
+  USER_PROFILE = "User Profile",
 }
 
 export default Screens;
