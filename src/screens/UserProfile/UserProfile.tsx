@@ -3,31 +3,29 @@ import { Center, ScrollView } from "native-base";
 import React, { useCallback, useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
-import { ProfileScreenProps } from "./types";
-import { IPublicacao, useAuth, usePublicacoes, useUsuario } from "../../hooks";
+import { UserProfileScreenProps } from "./types";
+import { IPublicacao, IUsuario, usePublicacoes, useUsuario } from "../../hooks";
 import UserProfileScreenHeader from "./components/UserProfileHeader";
 import UserActivity from "./components/UserActivity";
 
-const Profile = ({ navigation, route }: ProfileScreenProps) => {
-  // const { logout } = useAuth();
-  const { me } = useUsuario();
+const UserProfile = ({ route }: UserProfileScreenProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const userId = me?.idUsuario;
+  const userId = route.params?.userId;
 
   const { getUsuarioPublicacoes } = usePublicacoes();
+  const { getSingleUsuario } = useUsuario();
 
   const [publi, setPubli] = useState<IPublicacao[]>();
+  const [user, setUser] = useState<IUsuario>();
 
   const loadPubli = useCallback(async () => {
-    if (userId) {
-      try {
-        setIsLoading(true);
-        const getPubli = await getUsuarioPublicacoes(userId);
-        setPubli(getPubli);
-      } finally {
-        setIsLoading(false);
-      }
+    try {
+      setIsLoading(true);
+      const getPubli = await getUsuarioPublicacoes(userId);
+      setPubli(getPubli);
+    } finally {
+      setIsLoading(false);
     }
   }, [userId]);
 
@@ -35,23 +33,31 @@ const Profile = ({ navigation, route }: ProfileScreenProps) => {
     loadPubli();
   }, [userId]);
 
+  const loadUser = useCallback(async () => {
+    try {
+      const getUser = await getSingleUsuario(userId);
+      setUser(getUser);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    loadUser();
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
       loadPubli();
     }, [loadPubli])
   );
 
-  // const handleNavigateLogin = async () => {
-  //   await logout();
-  //   navigation.navigate(screens.WELCOME);
-  // };
-
   return (
     <Center flex={1} safeArea w="100%">
       <ScrollView w="100%" flex={1} bg="#FFFFFF">
         <UserProfileScreenHeader
-          user={me!}
-          isAdmin={me?.is_Super_Admin || false}
+          user={user!}
+          isAdmin={user?.is_Super_Admin || false}
           // onEditProfile={() => setEditing(true)}
         />
 
@@ -59,7 +65,7 @@ const Profile = ({ navigation, route }: ProfileScreenProps) => {
           onPublicacaoDeleted={loadPubli}
           items={publi?.reverse() ?? []}
           loading={isLoading}
-          user={me!}
+          user={user!}
           isOwner
         />
       </ScrollView>
@@ -67,4 +73,4 @@ const Profile = ({ navigation, route }: ProfileScreenProps) => {
   );
 };
 
-export default Profile;
+export default UserProfile;

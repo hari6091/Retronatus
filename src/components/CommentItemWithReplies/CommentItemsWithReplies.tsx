@@ -1,6 +1,5 @@
-import { orderBy } from "lodash";
 import { Box, Button, Divider } from "native-base";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 
 import { CommentItem } from "../CommentItem";
 import { ICommentItemWithRepliesProps } from "./types";
@@ -9,7 +8,7 @@ const CommentItemWithReplies = ({
   data,
   ...rest
 }: ICommentItemWithRepliesProps) => {
-  const { replies, totalReplies } = data;
+  const { respostas } = data;
 
   const [areRepliesVisible, setAreRepliesVisible] = useState(false);
 
@@ -51,22 +50,16 @@ const CommentItemWithReplies = ({
     return button;
   };
 
-  const listData = useMemo(
-    () =>
-      orderBy(replies, [(item) => new Date(item.createdAt).getTime()], ["asc"]),
-    [replies]
-  );
-
   return (
     <Box w="full" {...rest}>
       <CommentItem data={data} />
 
-      {replies ? replies.length > 0 && renderButton() : null}
+      {respostas ? respostas.length > 0 && renderButton() : null}
 
       {areRepliesVisible && (
         <Box>
-          {listData?.map((item) => (
-            <Box key={item.id}>
+          {respostas?.map((item) => (
+            <Box key={item.idResposta}>
               <CommentItem data={item} ml="8" mt="3" isReply />
 
               <Divider mt="3" />

@@ -1,8 +1,8 @@
 import { IBoxProps } from "native-base";
-import { CommentType } from "../CommentItem/types";
+import { IComentario } from "../../hooks";
 
 export interface ICommentItemWithRepliesProps
   extends Omit<IBoxProps, "children"> {
   id?: string;
-  data: CommentType;
+  data: IComentario;
 }

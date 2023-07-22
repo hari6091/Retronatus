@@ -53,6 +53,7 @@ const SingleViewPostScreen = ({
       <>
         <NewsfeedCard
           isSingleView
+          onPublicacaoDeleted={loadPubli}
           data={feedItem}
           bgColor="white"
           px="4"

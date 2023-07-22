@@ -41,46 +41,13 @@ const UserFeedCard = ({
   publiId,
   onRequestDetail,
   isOwner,
-  isSingleView,
   onPressPerdido,
   onPressAchado,
   onPressDevolvido,
+  onPressDelete,
+  onUserClick,
   ...rest
 }: IUserFeedCardHeaderProps) => {
-  const [publicacao, setPublicacao] = useState<IPublicacao>();
-
-  const { getSinglePublicacao, deletePublicacao } = usePublicacoes();
-  const navigation = useNavigation<SingleViewPostScreenProps["navigation"]>();
-
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  const onClose = () => setIsOpen(false);
-
-  const cancelRef = React.useRef(null);
-
-  const loadPubli = useCallback(async () => {
-    const getPubli = await getSinglePublicacao(publiId);
-    setPublicacao(getPubli);
-  }, [publiId]);
-
-  useEffect(() => {
-    loadPubli();
-  }, []);
-
-  const handlePressDelete = async () => {
-    if (publicacao) {
-      try {
-        await deletePublicacao(publiId);
-        onClose();
-        if (isSingleView) {
-          navigation.goBack();
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
-
   const formattedDate = () => {
     if (date) {
       return new Date(date).toLocaleString("pt-br", {
@@ -97,7 +64,7 @@ const UserFeedCard = ({
           source: profilePic,
         }}
         name={name}
-        // onUserPress={onUserAvatarPress}
+        onUserPress={onUserClick}
         rightElement={
           <HStack space="5">
             {status && <Icon type={status} />}
@@ -106,7 +73,7 @@ const UserFeedCard = ({
                 onClickAchado={onPressAchado}
                 onClickDevolvido={onPressDevolvido}
                 onClickPerdido={onPressPerdido}
-                onClickDelete={() => setIsOpen(!isOpen)}
+                onClickDelete={onPressDelete}
                 status={status}
               />
             ) : null}
@@ -115,35 +82,6 @@ const UserFeedCard = ({
         bottomElement={<Text>{formattedDate()}</Text>}
         {...rest}
       />
-      <AlertDialog
-        leastDestructiveRef={cancelRef}
-        isOpen={isOpen}
-        onClose={onClose}
-      >
-        <AlertDialog.Content>
-          <AlertDialog.CloseButton />
-          <AlertDialog.Header>Apagar publicacão</AlertDialog.Header>
-          <AlertDialog.Body>
-            Isto vai deletar esse post. Essa ação não pode ser desfeita. Dados
-            apagados não podem ser recuperados.
-          </AlertDialog.Body>
-          <AlertDialog.Footer>
-            <Button.Group space={2}>
-              <Button
-                variant="unstyled"
-                colorScheme="coolGray"
-                onPress={onClose}
-                ref={cancelRef}
-              >
-                Cancelar
-              </Button>
-              <Button colorScheme="danger" onPress={handlePressDelete}>
-                Deletar
-              </Button>
-            </Button.Group>
-          </AlertDialog.Footer>
-        </AlertDialog.Content>
-      </AlertDialog>
     </Pressable>
   );
 };

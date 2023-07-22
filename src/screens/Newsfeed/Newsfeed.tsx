@@ -16,7 +16,7 @@ const NewsfeedScreen = ({ navigation, route }: NewsfeedScreenProps) => {
     try {
       setIsLoading(true);
       const getPublicacoes = await allPublicacaoByLocal(route.params.idLocal);
-      setPublicacoes(getPublicacoes);
+      setPublicacoes(getPublicacoes.reverse());
     } finally {
       setIsLoading(false);
     }
@@ -33,7 +33,9 @@ const NewsfeedScreen = ({ navigation, route }: NewsfeedScreenProps) => {
   );
 
   const renderItem = useCallback(
-    ({ item }: { item: IPublicacao }) => <FeedItemNewsfeed data={item} />,
+    ({ item }: { item: IPublicacao }) => (
+      <FeedItemNewsfeed data={item} onPublicacaoDeleted={loadPublicacoes} />
+    ),
     []
   );
 

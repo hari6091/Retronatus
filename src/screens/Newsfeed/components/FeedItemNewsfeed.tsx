@@ -9,7 +9,7 @@ import { isEmpty } from "lodash";
 import { screens } from "../../../constants";
 import { SingleViewPostScreenProps } from "../../SingleViewPost/types";
 
-const FeedItemNewsfeed = ({ data }: IFeedItemProps) => {
+const FeedItemNewsfeed = ({ data, onPublicacaoDeleted }: IFeedItemProps) => {
   const commentInputRef = useRef<TextInput>(null);
   const navigation = useNavigation<SingleViewPostScreenProps["navigation"]>();
 
@@ -21,7 +21,11 @@ const FeedItemNewsfeed = ({ data }: IFeedItemProps) => {
 
   return (
     <Box bgColor="white" p="4" testID="feed-item" key={data.idPublicacao}>
-      <NewsfeedCard data={data} commentInputRef={commentInputRef} />
+      <NewsfeedCard
+        data={data}
+        commentInputRef={commentInputRef}
+        onPublicacaoDeleted={onPublicacaoDeleted}
+      />
       <Divider mt="4" />
       {!isEmpty(data.comentarios ?? []) &&
         data.comentarios![data.comentarios!.length - 1] && (

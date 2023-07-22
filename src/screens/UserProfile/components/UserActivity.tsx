@@ -11,7 +11,7 @@ import {
 } from "native-base";
 import React from "react";
 
-import { ProfileScreenProps } from "../types";
+import { UserProfileScreenProps } from "../types";
 import emptyStateImage from "../../../../assets/empty.png";
 import { FeedItemNewsfeed } from "../../Newsfeed/components";
 import { IPublicacao } from "../../../hooks";
@@ -32,7 +32,7 @@ export default function UserProfileActivityTab({
 }) {
   const empty = !loading && items.length === 0;
 
-  const navigation = useNavigation<ProfileScreenProps["navigation"]>();
+  const navigation = useNavigation<UserProfileScreenProps["navigation"]>();
 
   const goToCreatePost = () => {
     navigation.navigate(screens.MAIN, {

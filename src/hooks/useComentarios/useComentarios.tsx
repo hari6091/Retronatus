@@ -6,7 +6,7 @@ export interface IComentario {
   idComentario?: number;
   content: string;
   idUsuario: number;
-  idPublicacao: number;
+  idPublicacao?: number;
   date: Date;
   respostas?: IResposta[];
 }

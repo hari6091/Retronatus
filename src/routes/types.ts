@@ -8,7 +8,7 @@ import { screens } from "../constants";
 
 export type MainTabParamList = {
   [screens.HOME]: undefined;
-  [screens.PROFILE]: { userId: number } | undefined;
+  [screens.PROFILE]: undefined;
   [screens.NOTIFICATIONS]: undefined;
 };
 
@@ -24,6 +24,9 @@ export type RootStackParamList = {
   [screens.CREATE_POST]: { eventId: number };
   [screens.CREATE_LOCAL]: undefined;
   [screens.CREATE_CATEGORY]: undefined;
+  [screens.FEEDBACK]: undefined;
+  [screens.CHECK_FEEDBACKS]: undefined;
+  [screens.USER_PROFILE]: { userId: number };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

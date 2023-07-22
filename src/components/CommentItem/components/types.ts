@@ -1,6 +1,6 @@
 import { IStackProps } from "native-base";
-import { CommentType } from "../types";
 import { ICommentFormProps } from "../../CommentForm/types";
+import { IComentario } from "../../../hooks";
 
 export interface ICommentHeaderProps extends Omit<IStackProps, "children"> {
   author: {
@@ -18,9 +18,8 @@ export interface ICommentBodyProps extends Omit<IStackProps, "children"> {
 
 export interface ICommentActionsProps extends Omit<IStackProps, "children"> {
   replyAmount?: number;
-  comments?: { items: CommentType[]; total: number };
   onComment?: ICommentFormProps["onSubmit"];
-  data?: Omit<CommentType, "totalReplies" | "replies">;
+  data?: IComentario;
   isReply?: boolean;
   onPressReply?: () => void;
   readOnly?: boolean;

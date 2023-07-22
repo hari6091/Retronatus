@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { INewsfeedCardProps } from "./types";
-import { VStack } from "native-base";
+import { AlertDialog, Button, VStack } from "native-base";
 import { Actions, Header, PostBody, Stats } from "./components";
 import { useNavigation } from "@react-navigation/native";
 import { SingleViewPostScreenProps } from "../../screens/SingleViewPost/types";
@@ -12,6 +12,7 @@ const NewsfeedCard = ({
   commentInputRef,
   onPressComment,
   isSingleView,
+  onPublicacaoDeleted,
   ...rest
 }: INewsfeedCardProps) => {
   const navigation = useNavigation<SingleViewPostScreenProps["navigation"]>();
@@ -56,7 +57,7 @@ const NewsfeedCard = ({
     "achado" | "perdido" | "devolvido" | undefined
   >(status);
 
-  const { editPublicacao } = usePublicacoes();
+  const { editPublicacao, deletePublicacao } = usePublicacoes();
 
   const handlePressDevolvido = async () => {
     if (data) {
@@ -90,32 +91,94 @@ const NewsfeedCard = ({
       }
     }
   };
+
+  const handlePressUser = async () => {
+    if (idUsuario) {
+      navigation.navigate(screens.USER_PROFILE, { userId: idUsuario });
+    }
+  };
+
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const onClose = () => setIsOpen(false);
+
+  const cancelRef = React.useRef(null);
+
+  const handlePressDelete = async () => {
+    if (idPublicacao) {
+      try {
+        await deletePublicacao(idPublicacao);
+        onClose();
+        if (isSingleView) {
+          navigation.goBack();
+        }
+        if (onPublicacaoDeleted) {
+          onPublicacaoDeleted();
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
   return (
-    <VStack {...rest}>
-      <Header
-        isSingleView={isSingleView}
-        isOwner={isOwner}
-        publiId={idPublicacao ?? Math.random()}
-        name={usuario?.name ?? "Carregando..."}
-        profilePic=""
-        status={info ?? status}
-        date={date}
-        onRequestDetail={handleOpenSingleViewPost}
-        onPressPerdido={handlePressPerdido}
-        onPressAchado={handlePressAchado}
-        onPressDevolvido={handlePressDevolvido}
-      />
-      <PostBody
-        content={{ text: content }}
-        onRequestDetail={handleOpenSingleViewPost}
-      />
-      <Stats
-        navigation={navigation}
-        commentsAmount={data?.comentarios?.length}
-        onRequestDetail={handleOpenSingleViewPost}
-      />
-      <Actions onPressComment={handlePressComment} />
-    </VStack>
+    <>
+      <VStack {...rest}>
+        <Header
+          isOwner={isOwner}
+          publiId={idPublicacao}
+          name={usuario?.name ?? "Carregando..."}
+          profilePic=""
+          status={info ?? status}
+          date={date}
+          onRequestDetail={handleOpenSingleViewPost}
+          onPressPerdido={handlePressPerdido}
+          onPressAchado={handlePressAchado}
+          onPressDevolvido={handlePressDevolvido}
+          onUserClick={handlePressUser}
+          onPressDelete={() => setIsOpen(!isOpen)}
+        />
+        <PostBody
+          content={{ text: content }}
+          onRequestDetail={handleOpenSingleViewPost}
+        />
+        <Stats
+          navigation={navigation}
+          commentsAmount={data?.comentarios?.length}
+          onRequestDetail={handleOpenSingleViewPost}
+        />
+        <Actions onPressComment={handlePressComment} />
+      </VStack>
+
+      <AlertDialog
+        leastDestructiveRef={cancelRef}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <AlertDialog.Content>
+          <AlertDialog.CloseButton />
+          <AlertDialog.Header>Apagar publicacão</AlertDialog.Header>
+          <AlertDialog.Body>
+            Isto vai deletar esse post. Essa ação não pode ser desfeita. Dados
+            apagados não podem ser recuperados.
+          </AlertDialog.Body>
+          <AlertDialog.Footer>
+            <Button.Group space={2}>
+              <Button
+                variant="unstyled"
+                colorScheme="coolGray"
+                onPress={onClose}
+                ref={cancelRef}
+              >
+                Cancelar
+              </Button>
+              <Button colorScheme="danger" onPress={handlePressDelete}>
+                Deletar
+              </Button>
+            </Button.Group>
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog>
+    </>
   );
 };
 

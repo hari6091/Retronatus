@@ -51,7 +51,7 @@ const CommentActions = ({
 
       <HStack>
         {areRepliesVisible && (
-          <CommentForm feedId={data?.id} onSubmit={onComment} />
+          <CommentForm feedId={data?.idPublicacao} onSubmit={onComment} />
         )}
       </HStack>
     </>

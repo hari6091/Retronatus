@@ -7,4 +7,5 @@ export interface INewsfeedCardProps extends IBoxProps<INewsfeedCardProps> {
   commentInputRef?: React.RefObject<TextInput>;
   onPressComment?: () => void;
   isSingleView?: boolean;
+  onPublicacaoDeleted: () => void;
 }
