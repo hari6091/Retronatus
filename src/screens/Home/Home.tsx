@@ -97,7 +97,7 @@ const Home = ({ navigation }: HomeScreenProps) => {
   return (
     <Center flex={1} flexDirection="column" safeArea px="8" bg="#FFE5A5">
       <Text fontSize="36px" textAlign="center" mb="42px" color="#232831">
-        Retronatus
+        Achaki
       </Text>
 
       <FlatList

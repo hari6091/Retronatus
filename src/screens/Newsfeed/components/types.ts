@@ -6,4 +6,5 @@ export interface IFeedItemProps {
   commentInputRef?: React.RefObject<TextInput>;
   onPressComment?: () => void;
   onPublicacaoDeleted: () => void;
+  onAddComment?: () => void;
 }

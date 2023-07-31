@@ -6,4 +6,5 @@ export interface ICommentFormProps extends IStackProps {
   onSubmit?: ({ text }: { text: string }) => Promise<void> | void;
   commentInputRef?: RefObject<TextInput>;
   feedId?: number;
+  onAddComment?: () => void;
 }

@@ -23,4 +23,5 @@ export interface ICommentActionsProps extends Omit<IStackProps, "children"> {
   isReply?: boolean;
   onPressReply?: () => void;
   readOnly?: boolean;
+  onAddReply?: () => void;
 }

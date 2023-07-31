@@ -10,6 +10,7 @@ const CommentItem = ({
   data,
   isReply,
   onPressReply,
+  onAddReply,
   readOnly,
   ...rest
 }: ICommentItemProps) => {
@@ -28,16 +29,6 @@ const CommentItem = ({
     loadUser();
   }, []);
 
-  const handleReplies = async (values: any) => {
-    // await addComment({
-    //   parentId: id,
-    //   comment: {
-    //     text: values?.text,
-    //   },
-    //   feedId: values.feedId,
-    // });
-  };
-
   const formattedDate = () => {
     if (date) {
       return new Date(date).toLocaleString("pt-br", {
@@ -48,7 +39,7 @@ const CommentItem = ({
   };
 
   return (
-    <VStack {...rest} pr={isReply ? "8" : null}>
+    <VStack {...rest} pr={null}>
       <VStack bg="#ececec" borderRadius="10px" py="12px" pl="12px">
         <CommentHeader
           author={{
@@ -67,12 +58,12 @@ const CommentItem = ({
       </VStack>
       <CommentActions
         replyAmount={respostas?.length ?? 0}
-        onComment={handleReplies}
         data={data}
         mt="3"
         onPressReply={onPressReply}
         isReply={isReply}
         readOnly={readOnly}
+        onAddReply={onAddReply}
       />
     </VStack>
   );

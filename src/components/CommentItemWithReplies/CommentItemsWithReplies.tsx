@@ -6,6 +6,7 @@ import { ICommentItemWithRepliesProps } from "./types";
 
 const CommentItemWithReplies = ({
   data,
+  onAddReply,
   ...rest
 }: ICommentItemWithRepliesProps) => {
   const { respostas } = data;
@@ -52,7 +53,7 @@ const CommentItemWithReplies = ({
 
   return (
     <Box w="full" {...rest}>
-      <CommentItem data={data} />
+      <CommentItem data={data} onAddReply={onAddReply} />
 
       {respostas ? respostas.length > 0 && renderButton() : null}
 

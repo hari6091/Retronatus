@@ -5,4 +5,5 @@ export interface ICommentItemWithRepliesProps
   extends Omit<IBoxProps, "children"> {
   id?: string;
   data: IComentario;
+  onAddReply?: () => void;
 }

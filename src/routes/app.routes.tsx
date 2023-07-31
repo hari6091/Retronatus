@@ -71,7 +71,7 @@ export const AppRoutes = () => {
           <MainStack.Screen
             name={screens.USER_PROFILE}
             component={UserProfile}
-            options={{ headerShown: true, title: "Avaliar Feedbacks" }}
+            options={{ headerShown: false }}
           />
         </MainStack.Group>
       ) : (

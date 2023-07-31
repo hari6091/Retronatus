@@ -13,7 +13,6 @@ import {
   IPublicacao,
   useComentarios,
   usePublicacoes,
-  useUsuario,
 } from "../../hooks";
 
 const SingleViewPostScreen = ({
@@ -21,8 +20,27 @@ const SingleViewPostScreen = ({
   route,
 }: SingleViewPostScreenProps) => {
   const { getSinglePublicacao } = usePublicacoes();
-  const { comentarios } = useComentarios(route.params.feedId);
+  const { allComentarioByPublicacao } = useComentarios(route.params.feedId);
   const [feedItem, setFeedItem] = useState<IPublicacao>();
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [comentarios, setComentarios] = useState<IComentario[]>();
+
+  const loadComments = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const getComentarios = await allComentarioByPublicacao(
+        route.params.feedId
+      );
+      setComentarios(getComentarios.reverse());
+    } finally {
+      setIsLoading(false);
+    }
+  }, [navigation]);
+
+  useEffect(() => {
+    loadComments();
+  }, [navigation]);
 
   const loadPubli = useCallback(async () => {
     const getPubli = await getSinglePublicacao(route.params.feedId);
@@ -39,7 +57,12 @@ const SingleViewPostScreen = ({
     useState<boolean>(false);
 
   const renderItem = ({ item }: { item: IComentario }) => (
-    <CommentItemWithReplies data={item} bgColor="white" px="4" />
+    <CommentItemWithReplies
+      data={item}
+      bgColor="white"
+      px="4"
+      onAddReply={loadComments}
+    />
   );
 
   const keyExtractor = useCallback(
@@ -70,6 +93,7 @@ const SingleViewPostScreen = ({
             <CommentForm
               feedId={route.params.feedId}
               commentInputRef={commentInputRef}
+              onAddComment={loadComments}
             />
             <Divider mt="4" />
           </Box>
@@ -91,6 +115,8 @@ const SingleViewPostScreen = ({
       <FlatList
         flex={1}
         data={comentarios}
+        refreshing={isLoading}
+        onRefresh={loadComments}
         ListHeaderComponent={ListHeaderComponent}
         ItemSeparatorComponent={ItemSeparatorComponent}
         renderItem={renderItem}

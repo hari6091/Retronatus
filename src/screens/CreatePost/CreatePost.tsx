@@ -22,7 +22,7 @@ import { useCategorias, usePublicacoes, useUsuario } from "../../hooks";
 
 const CreatePost = ({ navigation, route }: CreatePostScreenProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { createPublicacao } = usePublicacoes(route.params.eventId);
+  const { createPublicacao } = usePublicacoes();
   const { me } = useUsuario();
   const { categorias } = useCategorias();
 

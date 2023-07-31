@@ -10,18 +10,17 @@ import {
 } from "native-base";
 import React from "react";
 
-import { ICommentFormProps } from "./types";
+import { IReplyFormrops } from "./types";
 import { useFormik } from "formik";
-import { useComentarios, useUsuario } from "../../hooks";
+import { useRespostas, useUsuario } from "../../hooks";
 
-const CommentForm = ({
-  onSubmit: onSubmitProp,
+const ReplyForm = ({
   commentInputRef,
-  feedId,
-  onAddComment,
+  commentId,
+  onAddReply,
   ...rest
-}: ICommentFormProps) => {
-  const { createComentario } = useComentarios();
+}: IReplyFormrops) => {
+  const { createResposta } = useRespostas(commentId);
   const { me } = useUsuario();
 
   const {
@@ -35,21 +34,18 @@ const CommentForm = ({
   } = useFormik({
     initialValues: { text: "" },
     onSubmit: async () => {
-      if (feedId && me) {
-        console.log("Comentando...");
-        await createComentario({
+      if (commentId && me) {
+        await createResposta({
           content: values.text,
-          idPublicacao: feedId,
+          idComentario: commentId,
           idUsuario: me.idUsuario,
           date: new Date(Date.now()),
         });
-
-        if (onAddComment) {
-          onAddComment();
+        if (onAddReply) {
+          onAddReply();
         }
-
         Toast.show({
-          title: "Comentário adicionado com sucesso!",
+          title: "Resposta adicionada com sucesso!",
         });
         resetForm();
       }
@@ -66,7 +62,7 @@ const CommentForm = ({
             <Input
               ref={commentInputRef}
               onChangeText={handleChange("text")}
-              placeholder="Deixe um comentário..."
+              placeholder="Deixe uma resposta..."
               onBlur={handleBlur("text")}
               value={values.text}
             />
@@ -93,4 +89,4 @@ const CommentForm = ({
   );
 };
 
-export default CommentForm;
+export default ReplyForm;

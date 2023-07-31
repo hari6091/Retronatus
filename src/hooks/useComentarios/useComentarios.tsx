@@ -12,15 +12,11 @@ export interface IComentario {
 }
 
 const useComentarios = (idPublicacao?: number) => {
-  const [comentarios, setComentarios] = useState<IComentario[]>();
-
   async function allComentarioByPublicacao(idPublicacao: number) {
     try {
-      await api
-        .get(`/Comentario/GetByPublicacao/${idPublicacao}`)
-        .then((response) => {
-          setComentarios(response.data);
-        });
+      const req = await api.get(`/Comentario/GetByPublicacao/${idPublicacao}`);
+
+      return req.data;
     } catch (e) {
       throw new Error("Algo deu errado ao listar os Comentários. " + e);
     }
@@ -96,7 +92,7 @@ const useComentarios = (idPublicacao?: number) => {
   }, []);
 
   return {
-    comentarios,
+    allComentarioByPublicacao,
     createComentario,
     getSingleComentario,
     editComentario,

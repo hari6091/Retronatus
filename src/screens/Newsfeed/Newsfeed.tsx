@@ -34,7 +34,11 @@ const NewsfeedScreen = ({ navigation, route }: NewsfeedScreenProps) => {
 
   const renderItem = useCallback(
     ({ item }: { item: IPublicacao }) => (
-      <FeedItemNewsfeed data={item} onPublicacaoDeleted={loadPublicacoes} />
+      <FeedItemNewsfeed
+        data={item}
+        onPublicacaoDeleted={loadPublicacoes}
+        onAddComment={loadPublicacoes}
+      />
     ),
     []
   );

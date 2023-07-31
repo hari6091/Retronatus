@@ -9,7 +9,11 @@ import { isEmpty } from "lodash";
 import { screens } from "../../../constants";
 import { SingleViewPostScreenProps } from "../../SingleViewPost/types";
 
-const FeedItemNewsfeed = ({ data, onPublicacaoDeleted }: IFeedItemProps) => {
+const FeedItemNewsfeed = ({
+  data,
+  onPublicacaoDeleted,
+  onAddComment,
+}: IFeedItemProps) => {
   const commentInputRef = useRef<TextInput>(null);
   const navigation = useNavigation<SingleViewPostScreenProps["navigation"]>();
 
@@ -37,6 +41,7 @@ const FeedItemNewsfeed = ({ data, onPublicacaoDeleted }: IFeedItemProps) => {
           />
         )}
       <CommentForm
+        onAddComment={onAddComment}
         commentInputRef={commentInputRef}
         feedId={data.idPublicacao}
         mt="4"

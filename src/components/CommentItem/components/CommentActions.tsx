@@ -2,7 +2,7 @@ import { Button, HStack, Text } from "native-base";
 import React, { useState } from "react";
 
 import { ICommentActionsProps } from "./types";
-import { CommentForm } from "../../CommentForm";
+import { ReplyForm } from "../../ReplyForm";
 
 const CommentActions = ({
   replyAmount = 0,
@@ -10,6 +10,7 @@ const CommentActions = ({
   onComment,
   isReply,
   onPressReply,
+  onAddReply,
   readOnly,
   ...rest
 }: ICommentActionsProps) => {
@@ -51,7 +52,7 @@ const CommentActions = ({
 
       <HStack>
         {areRepliesVisible && (
-          <CommentForm feedId={data?.idPublicacao} onSubmit={onComment} />
+          <ReplyForm commentId={data?.idComentario} onAddReply={onAddReply} />
         )}
       </HStack>
     </>
