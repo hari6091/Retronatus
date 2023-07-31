@@ -14,6 +14,7 @@ import {
   useComentarios,
   usePublicacoes,
 } from "../../hooks";
+import CommentsEmpty from "./CommentsEmpty";
 
 const SingleViewPostScreen = ({
   navigation,
@@ -121,6 +122,7 @@ const SingleViewPostScreen = ({
         ItemSeparatorComponent={ItemSeparatorComponent}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
+        ListEmptyComponent={CommentsEmpty}
       />
     </Box>
   );

@@ -59,7 +59,7 @@ const CommentItemWithReplies = ({
 
       {areRepliesVisible && (
         <Box>
-          {respostas?.map((item) => (
+          {respostas?.reverse().map((item) => (
             <Box key={item.idResposta}>
               <CommentItem data={item} ml="8" mt="3" isReply />
 

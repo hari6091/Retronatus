@@ -83,7 +83,7 @@ const Signup = ({ navigation }: SignupScreenProps) => {
     >
       <Center flex={1} flexDirection="column" safeArea px="10" bg="#232831">
         <Text fontSize="36px" textAlign="center" mb="42px" color="#EBE8E1">
-          Retronatus
+          Achaki
         </Text>
         <Flex backgroundColor="#FFE5A5" borderRadius="10px">
           <VStack justifyContent="center">
