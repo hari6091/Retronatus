@@ -36,17 +36,17 @@ export const AppRoutes = () => {
           <MainStack.Screen
             name={screens.NEWSFEED}
             component={Newsfeed}
-            options={{ headerShown: true }}
+            options={{ headerShown: true, title: "Publicações" }}
           />
           <MainStack.Screen
             name={screens.SINGLE_VIEW_POST}
             component={SingleViewPost}
-            options={{ headerShown: true }}
+            options={{ headerShown: true, title: "Postagem" }}
           />
           <MainStack.Screen
             name={screens.CREATE_POST}
             component={CreatePost}
-            options={{ headerShown: true }}
+            options={{ headerShown: true, title: "Criar postagem" }}
           />
           <MainStack.Screen
             name={screens.CREATE_LOCAL}
