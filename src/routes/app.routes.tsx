@@ -12,9 +12,10 @@ import {
   Signup,
   SingleViewPost,
   Welcome,
-  Feedback,
   CheckFeedbacks,
   UserProfile,
+  RequestLocalFeedback,
+  RequestCategoryFeedback,
 } from "../screens";
 import { useAuth } from "../hooks";
 import MainTabScreen from "./MainTabScreen";
@@ -59,9 +60,14 @@ export const AppRoutes = () => {
             options={{ headerShown: true, title: "Adicionar nova categoria" }}
           />
           <MainStack.Screen
-            name={screens.FEEDBACK}
-            component={Feedback}
+            name={screens.FEEDBACK_LOCAL}
+            component={RequestLocalFeedback}
             options={{ headerShown: true, title: "Solicitar novo local" }}
+          />
+          <MainStack.Screen
+            name={screens.FEEDBACK_CATEGORY}
+            component={RequestCategoryFeedback}
+            options={{ headerShown: true, title: "Solicitar categoria" }}
           />
           <MainStack.Screen
             name={screens.CHECK_FEEDBACKS}

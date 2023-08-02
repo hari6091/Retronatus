@@ -3,10 +3,10 @@ import api from "../../services/api";
 import { AuthContext } from "../../contexts";
 
 export interface IFeedback {
-  idFeedback: number;
+  idFeedback?: number;
   name: string;
   address?: string;
-  type: "Local" | "Categoria";
+  type: "Local" | "Category";
 }
 
 const useFeedbacks = () => {
@@ -24,7 +24,7 @@ const useFeedbacks = () => {
       const request = await api.post("/Feedback", {
         name,
         address,
-        type: 'Local',
+        type: "Local",
       });
 
       return request.data;
@@ -37,12 +37,14 @@ const useFeedbacks = () => {
     try {
       const request = await api.post("/Feedback", {
         name,
-        type: 'Categoria',
+        type: "Category",
       });
 
       return request.data;
     } catch (e) {
-      throw new Error("Algo deu errado ao criar um feedback de categoria. " + e);
+      throw new Error(
+        "Algo deu errado ao criar um feedback de categoria. " + e
+      );
     }
   }
 
@@ -50,7 +52,7 @@ const useFeedbacks = () => {
     try {
       const response = await api.post(
         `/Feedback/ConfirmFeedback/${idFeedback}`,
-        {},
+        {}
       );
 
       return response.data;
@@ -59,7 +61,23 @@ const useFeedbacks = () => {
     }
   }
 
-  return { createFeedbackLocal, createFeedbackCategoria, confirmFeedback, getFeedbacks };
+  async function deleteFeedback(iidFeedback: number) {
+    try {
+      const request = await api.delete(`/Feedback/${iidFeedback}`);
+
+      return request.data;
+    } catch (e) {
+      throw new Error("Algo deu errado ao deletar um feedback. " + e);
+    }
+  }
+
+  return {
+    createFeedbackLocal,
+    createFeedbackCategoria,
+    confirmFeedback,
+    getFeedbacks,
+    deleteFeedback,
+  };
 };
 
 export default useFeedbacks;

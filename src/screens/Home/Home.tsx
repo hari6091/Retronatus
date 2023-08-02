@@ -28,6 +28,8 @@ const Home = ({ navigation }: HomeScreenProps) => {
   const { me } = useUsuario();
   const { isOpen, onOpen, onClose } = useDisclose();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isFeedbackRequestOpen, setIsFeedbackRequestOpen] =
+    useState<boolean>(false);
 
   const [locais, setLocais] = useState<ILocal[]>();
 
@@ -139,7 +141,9 @@ const Home = ({ navigation }: HomeScreenProps) => {
           h="64px"
           bg="#232831"
           icon={<Icon color="white" as={MaterialIcons} name="add" size="md" />}
-          onPress={() => navigation.navigate(screens.FEEDBACK)}
+          onPress={() => {
+            setIsFeedbackRequestOpen(!isFeedbackRequestOpen);
+          }}
         />
       )}
 
@@ -153,6 +157,32 @@ const Home = ({ navigation }: HomeScreenProps) => {
           </Actionsheet.Item>
           <Actionsheet.Item onPress={handleNavigateSeeFeedbacks}>
             Avaliar Solicitações
+          </Actionsheet.Item>
+        </Actionsheet.Content>
+      </Actionsheet>
+
+      <Actionsheet
+        isOpen={isFeedbackRequestOpen}
+        onClose={() => {
+          setIsFeedbackRequestOpen(!isFeedbackRequestOpen);
+        }}
+      >
+        <Actionsheet.Content>
+          <Actionsheet.Item
+            onPress={() => {
+              setIsFeedbackRequestOpen(!isFeedbackRequestOpen);
+              navigation.navigate(screens.FEEDBACK_LOCAL);
+            }}
+          >
+            Solicitar novo local
+          </Actionsheet.Item>
+          <Actionsheet.Item
+            onPress={() => {
+              setIsFeedbackRequestOpen(!isFeedbackRequestOpen);
+              navigation.navigate(screens.FEEDBACK_CATEGORY);
+            }}
+          >
+            Solicitar nova categoria
           </Actionsheet.Item>
         </Actionsheet.Content>
       </Actionsheet>
